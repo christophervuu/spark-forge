@@ -22,13 +22,16 @@ Development follows a **spec-driven, packet-first workflow**.
 The lifecycle of a change is:
 
 ```
-SEED → PACKET → Implementation Plan → Tasks → Code → Tests
+SEED → FOUNDATION → PACKET → Implementation Plan → Tasks → Code → Tests
 ```
 
 Definitions:
 
 **SEED**
 High-level project direction or feature concept.
+
+**FOUNDATION**
+Stable product boundary and minimal capability definition.
 
 **PACKET**
 A structured design capsule describing a specific change.
@@ -48,6 +51,11 @@ The repository is organized into functional domains.
 ```
 /decisions      Architectural decision records
 /forge          Workflow rules and templates
+/foundations    Stable product/system boundaries
+/notes
+  /sparks        Raw idea capture
+  /seeds         Exploratory initiative definitions
+/packets        Behavioral change capsules (one folder per packet)
 /plans
   /impl         Implementation strategies
   /tasks        Executable tasks
@@ -170,7 +178,7 @@ Implementation agents may write to:
 ```
 /plans/impl
 /plans/tasks
-/plans/TASKS.md
+/plans/tasks/TASKS.md
 ```
 
 Implementation agents **must not modify**:
@@ -250,7 +258,7 @@ Specs must not be modified.
 
 # 9. Global Task Board
 
-`plans/TASKS.md` acts as the **global index of all tasks**.
+`plans/tasks/TASKS.md` acts as the **global index of all tasks**.
 
 It tracks:
 

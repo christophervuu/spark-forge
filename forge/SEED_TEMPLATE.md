@@ -6,6 +6,18 @@ Short descriptive name of the initiative, project, or idea.
 
 ---
 
+## ID
+
+SD-###
+
+---
+
+## Spark (Optional)
+
+SP-###
+
+---
+
 ## Status
 
 draft | active | archived

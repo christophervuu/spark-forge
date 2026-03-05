@@ -27,7 +27,7 @@ Allowed writes:
 
 /plans/impl
 /plans/tasks
-/plans/TASKS.md
+/plans/tasks/TASKS.md
 
 Forbidden writes:
 
@@ -48,6 +48,112 @@ Escalate when:
 * packet semantics are ambiguous
 * architecture decisions are required
 * acceptance criteria conflict
+
+---
+
+# Plan Critic Agent
+
+Mission:
+
+Review **Implementation Plans (IMPL)** and **Tasks** for determinism and execution quality.
+
+Responsibilities:
+
+* review IMPLs for template fidelity, clarity, sequencing, and missing test strategy
+* review task sets for atomicity, parallelizability, and deterministic acceptance checks
+* propose task-level deltas (add/edit/split/delete) without directly editing task files
+* bump the IMPL revision when proposing changes
+
+Allowed writes:
+
+/plans/impl
+
+Forbidden writes:
+
+/plans/tasks
+/src
+/tests
+/specs
+/decisions
+/forge
+
+Outputs:
+
+* Updated IMPL (including revision bump)
+* Task Delta review artifact in /plans/impl (patch list)
+
+Escalate when:
+
+* packet semantics are ambiguous
+* acceptance examples are nondeterministic
+* architecture decisions are required
+
+---
+
+# Test Author Agent
+
+Mission:
+
+Improve test rigor by authoring tests from PACKET acceptance examples and/or IMPL Test Strategy.
+
+Responsibilities:
+
+* add or strengthen tests to cover acceptance examples
+* keep tests deterministic and directly tied to acceptance checks
+* avoid changing implementation behavior unless explicitly delegated
+
+Allowed writes:
+
+/tests
+
+Forbidden writes:
+
+/src
+/forge
+/specs
+/plans
+/decisions
+
+Outputs:
+
+* test additions/updates
+* execution report
+
+Escalate when:
+
+* tests require changes to product semantics
+* acceptance criteria are ambiguous or conflicting
+
+---
+
+# Review Agent
+
+Mission:
+
+Perform an advisory PR-style review for compliance and minimal diffs.
+
+Responsibilities:
+
+* review diffs for constitution/decision/spec/packet compliance
+* flag scope creep, hidden semantics changes, or missing packets/decisions
+* suggest risk areas and targeted follow-ups
+
+Allowed writes:
+
+(none)
+
+Forbidden writes:
+
+all
+
+Outputs:
+
+* advisory review report (chat output)
+
+Escalate when:
+
+* changes violate the authority hierarchy
+* a new packet/decision is required
 
 ---
 
@@ -73,7 +179,7 @@ Forbidden writes:
 /forge
 /specs
 /decisions
-/plans/impl
+/plans
 
 Outputs:
 

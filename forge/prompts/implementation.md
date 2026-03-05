@@ -14,7 +14,7 @@ You must:
 1. Interpret the design artifact
 2. Produce an implementation outline if the work is complex
 3. Generate atomic task files in `/plans/tasks`
-4. Update `/plans/TASKS.md`
+4. Update `plans/tasks/TASKS.md`
 
 Rules:
 

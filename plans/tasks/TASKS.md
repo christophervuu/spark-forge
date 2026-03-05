@@ -1,7 +1,13 @@
 # Global Task Board
 
 This file is the **global index of all implementation tasks**.
-Tasks are generated from SEEDs or PACKETs and stored in `plans/tasks/`.
+Tasks are generated from SEEDs or PACKETs and stored under `plans/tasks/`.
+
+Canonical layout:
+
+```text
+plans/tasks/P-###/T-###-##-slug.md
+```
 
 ---
 

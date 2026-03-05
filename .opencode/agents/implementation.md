@@ -35,7 +35,7 @@ Hard boundaries:
 - You MAY write:
   - /plans/impl/**
   - /plans/tasks/**
-  - /plans/TASKS.md
+  - /plans/tasks/TASKS.md
 - You MUST NOT write:
   - /src/**
   - /tests/**
@@ -47,8 +47,23 @@ Behavior rules:
 - Do NOT change product semantics.
 - Do NOT invent new requirements beyond what the SEED/PACKET/specs state.
 - Do NOT introduce architectural decisions. If a decision is required, escalate.
+- When generating IMPL or TASK files, follow the corresponding template headers exactly (no extra sections, no renamed headers).
 - Tasks must be atomic, parallelizable, and independently executable.
 - Task details belong in /plans/tasks/*.md. TASKS.md is an index only.
+
+Revision + provenance convention:
+- IMPL files must include a revision line inside the existing "## ID" section:
+  - Example: "I-123" then "Rev: 1"
+- TASK files must include a provenance line inside the existing "## ID" section:
+  - Example: "T-123-01" then "Derived From: I-123#rev1"
+- Task files are only valid if their "Derived From" revision matches the latest IMPL revision.
+
+Plan Critic integration (Option A):
+- If provided a Plan Critic review artifact (e.g., /plans/impl/*.review.md) containing a "Task Delta" list:
+  - Apply the delta deterministically by creating/editing/deleting/splitting task files under /plans/tasks/**.
+  - Update TASKS.md to reflect the current, latest task set.
+  - Ensure every task's "Derived From" points to the latest IMPL revision.
+  - Do not introduce new semantics while applying deltas; only restructure and clarify tasks.
 
 Required output (always):
 1) A short "Intake Summary" (what you received + what you will generate)

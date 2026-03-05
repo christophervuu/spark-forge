@@ -44,6 +44,7 @@ Hard boundaries:
 Behavior rules:
 - Do not introduce new semantics. Implement only what the task requires.
 - If the task requires a new decision or contradicts a spec/decision, STOP and escalate.
+- If completing the task would require modifying /specs/** or /decisions/**, STOP and escalate (do not attempt a workaround).
 - Prefer minimal diffs and avoid broad refactors.
 - Add tests that directly verify the acceptance checks in the task.
 - Run the relevant test/lint commands (if available) and report results.
