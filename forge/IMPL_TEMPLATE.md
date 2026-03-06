@@ -12,6 +12,12 @@ I-###
 
 Rev: 1
 
+Rev bump required if:
+
+- task list changes (add/edit/split/delete)
+- sequencing changes
+- architecture/structure changes
+
 ---
 
 ## Packet
@@ -88,7 +94,16 @@ List risk areas to watch during implementation.
 
 List the atomic tasks to generate.
 
+Each task entry must include:
+
+- Task ID: `T-###-##` (or `TBD` if not allocated yet)
+- Title: short, action-oriented
+- Depends On: a bullet list of Task IDs, or `- none`
+- Parallelizable: Y/N
+- Primary acceptance check: one deterministic check
+
 Each task must be:
+
 - atomic
 - parallelizable
 - deterministic

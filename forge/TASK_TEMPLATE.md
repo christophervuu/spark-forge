@@ -10,14 +10,23 @@ Short, action-oriented task name.
 
 T-###-##
 
-Derived From: I-123#rev1
+Derived From: I-####revN
 
+Depends On:
+
+- none
 
 ---
 
 ## Packet
 
 P-###
+
+---
+
+## Status
+
+todo | in_progress | done | blocked
 
 ---
 
@@ -56,6 +65,7 @@ List mechanical steps to complete this task.
 Deterministic checks the task agent can verify.
 
 Examples:
+
 - Tests added/updated and passing
 - Specific function behaves per examples
 

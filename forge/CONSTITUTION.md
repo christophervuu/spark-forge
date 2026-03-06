@@ -6,10 +6,10 @@ All agents and contributors must follow these rules when creating designs, plans
 
 The constitution exists to ensure:
 
-* deterministic AI-assisted development
-* minimal ambiguity
-* safe parallel execution
-* clear separation of responsibilities
+- deterministic AI-assisted development
+- minimal ambiguity
+- safe parallel execution
+- clear separation of responsibilities
 
 This document has **higher authority** than packets, tasks, or implementation plans.
 
@@ -110,17 +110,17 @@ A packet cannot override a decision without creating a new decision record.
 
 The following artifacts are **append-only**:
 
-* SEED documents
-* PACKET documents
-* Decision records
+- SEED documents
+- PACKET documents
+- Decision records
 
 They must **never be edited after creation**.
 
 Corrections or revisions must be introduced through:
 
-* a new PACKET
-* a new Decision Record
-* a new SEED revision
+- a new PACKET
+- a new Decision Record
+- a new SEED revision
 
 This preserves project history and prevents silent design drift.
 
@@ -130,12 +130,17 @@ This preserves project history and prevents silent design drift.
 
 Architectural or structural decisions must be recorded in `/decisions`.
 
+`/decisions` is **human-authored only**.
+
+- Agents may recommend creating a decision record (including a suggested filename and draft contents).
+- Agents must not create, edit, or delete files under `/decisions`.
+
 Decision records must include:
 
-* Context
-* Decision
-* Rationale
-* Consequences
+- Context
+- Decision
+- Rationale
+- Consequences
 
 Each decision receives a unique ID:
 
@@ -153,12 +158,16 @@ Existing decisions cannot be reversed without creating a new decision record.
 
 # 6. Agent Responsibilities
 
+Agent roles, permissions, and detailed operating rules are defined in:
+
+- `/forge/AGENTS.md`
+
 ## Design Phase (ChatGPT)
 
 Produces:
 
-* SEED documents
-* PACKET documents
+- SEED documents
+- PACKET documents
 
 Design artifacts must be structured and deterministic.
 
@@ -168,26 +177,12 @@ Design artifacts must be structured and deterministic.
 
 Responsibilities:
 
-* interpret SEED or PACKET documents
-* generate implementation plans
-* generate atomic task files
-* update the global task board
+- interpret SEED or PACKET documents
+- generate implementation plans
+- generate atomic task files
+- update the global task board
 
-Implementation agents may write to:
-
-```
-/plans/impl
-/plans/tasks
-/plans/tasks/TASKS.md
-```
-
-Implementation agents **must not modify**:
-
-```
-/src
-/tests
-/specs
-```
+Implementation agents must follow the allowed/forbidden writes defined in `/forge/AGENTS.md`.
 
 ---
 
@@ -195,25 +190,30 @@ Implementation agents **must not modify**:
 
 Responsibilities:
 
-* implement code changes
-* update or add tests
-* run validation
-* produce diffs
+- implement code changes
+- update or add tests
+- run validation
+- produce diffs
 
-Task agents may modify:
+Task agents must follow the allowed/forbidden writes defined in `/forge/AGENTS.md`.
 
-```
-/src
-/tests
-```
+---
 
-Task agents **must not modify**:
+# 6a. Determinism Rules
 
-```
-/decisions
-/specs
-/forge
-```
+Acceptance examples and acceptance checks must be deterministic.
+
+Forbidden:
+
+- relative time (e.g., “yesterday”, “in 5 minutes”) without an injected clock
+- external network access (e.g., calling public APIs) as part of acceptance
+- unseeded randomness
+
+Allowed (when needed):
+
+- injected clock/time provider
+- mocked or stubbed services
+- seeded randomness
 
 ---
 
@@ -223,10 +223,10 @@ Tasks must be **atomic and executable**.
 
 Each task must include:
 
-* clear objective
-* affected files
-* implementation steps
-* acceptance criteria
+- clear objective
+- affected files
+- implementation steps
+- acceptance criteria
 
 Tasks must be small enough to be completed independently.
 
@@ -262,9 +262,9 @@ Specs must not be modified.
 
 It tracks:
 
-* task status
-* task origin (SEED or PACKET)
-* completion state
+- task status
+- task origin (SEED or PACKET)
+- completion state
 
 Task details must live in:
 
@@ -280,10 +280,10 @@ Task details must live in:
 
 Agents must escalate when encountering:
 
-* ambiguous specifications
-* conflicting design artifacts
-* missing architectural decisions
-* tasks exceeding reasonable scope
+- ambiguous specifications
+- conflicting design artifacts
+- missing architectural decisions
+- tasks exceeding reasonable scope
 
 When escalation occurs, a new **PACKET** must be created to clarify intent.
 
@@ -293,11 +293,11 @@ When escalation occurs, a new **PACKET** must be created to clarify intent.
 
 All development should prioritize:
 
-* minimal diffs
-* deterministic behavior
-* explicit decisions
-* safe parallel work
-* reversible changes
+- minimal diffs
+- deterministic behavior
+- explicit decisions
+- safe parallel work
+- reversible changes
 
 Agents should prefer **clarity over cleverness** and **determinism over speculation**.
 
@@ -309,6 +309,6 @@ This constitution may only be changed through a **packet proposing a constitutio
 
 Changes must clearly state:
 
-* the rule being modified
-* the rationale for the modification
-* the expected impact on workflow
+- the rule being modified
+- the rationale for the modification
+- the expected impact on workflow

@@ -7,6 +7,8 @@ Before starting, you must read:
 /forge/CONSTITUTION.md
 /forge/AGENTS.md
 
+If any prompt text conflicts with `/forge/AGENTS.md` write boundaries, `/forge/AGENTS.md` is authoritative.
+
 Your mission is to convert a **SEED or PACKET** into executable work.
 
 You must:
@@ -18,19 +20,21 @@ You must:
 
 Rules:
 
-* Tasks must be atomic and independently executable
-* Do not modify `/src` or `/tests`
-* Do not introduce architectural decisions
-* Do not modify `/specs` unless explicitly allowed
+- Tasks must be atomic and independently executable
+- Do not modify `/src` or `/tests`
+- Do not introduce architectural decisions
+- Do not modify `/specs` unless explicitly allowed
+- For each generated task file, include a `Depends On:` field inside the existing `## ID` section.
+- Use a bullet list for dependencies; default must be `- none`.
 
 Escalate if:
 
-* semantics are unclear
-* new architectural decisions are required
-* acceptance criteria conflict
+- semantics are unclear
+- new architectural decisions are required
+- acceptance criteria conflict
 
 Outputs must include:
 
-* implementation plan (optional)
-* task file definitions
-* updates to TASKS.md
+- implementation plan (optional)
+- task file definitions
+- updates to TASKS.md

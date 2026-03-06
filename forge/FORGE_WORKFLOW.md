@@ -19,6 +19,12 @@ Artifacts exist as a deterministic pipeline:
 SPARK → SEED → FOUNDATION → PACKETS → IMPLEMENTATION PLAN → TASKS → CODE → TESTS
 ```
 
+Critique loop (planning only):
+
+```text
+PACKET → IMPL → Plan Critic (deltas + IMPL rev bump) → Implementation Agent applies deltas → TASKS
+```
+
 - **Spark:** Raw idea or problem statement.
 - **Seed:** Exploratory idea expansion and motivation.
 - **Foundation:** Stable product boundary and capability set.
@@ -29,7 +35,9 @@ SPARK → SEED → FOUNDATION → PACKETS → IMPLEMENTATION PLAN → TASKS → 
 ---
 
 # Commands
+
 - **refine:** Identify ambiguity before generating artifacts.
+- **generate spark:** Produce a SPARK for raw idea capture.
 - **generate seed:** Produce a SEED from a Spark or discussion.
 - **generate foundation:** Produce a FOUNDATION from an accepted SEED.
 - **generate packet:** Produce a PACKET for a specific atomic change under a FOUNDATION.
@@ -37,10 +45,11 @@ SPARK → SEED → FOUNDATION → PACKETS → IMPLEMENTATION PLAN → TASKS → 
 ---
 
 # Logic Rules
-1. **Macro vs Micro:** 
-    - Seeds explore problems, motivations, and possible features.
-    - Foundations define the minimal capability boundary and explicit non-goals.
-    - Packets define **observable behavior** and acceptance examples.
+
+1. **Macro vs Micro:**
+   - Seeds explore problems, motivations, and possible features.
+   - Foundations define the minimal capability boundary and explicit non-goals.
+   - Packets define **observable behavior** and acceptance examples.
 2. **Template Fidelity:** Follow `SEED_TEMPLATE.md` and `PACKET_TEMPLATE.md` exactly. No extra sections or renamed headers.
 3. **Refinement:** If input is ambiguous, use the `refine` logic instead of guessing.
 
@@ -61,4 +70,5 @@ plans/tasks/TASKS.md
 ---
 
 # Determinism Requirements
+
 Artifact structure must remain stable. LLMs must not modify template structure, as downstream automation relies on these specific headers to parse and generate plans or tasks.
