@@ -7,6 +7,10 @@ Before starting, you must read:
 /forge/CONSTITUTION.md
 /forge/AGENTS.md
 
+## Inputs Required
+
+- PACKET file: `packets/P-###-slug/PACKET.md`
+
 You may modify:
 
 /tests
@@ -33,4 +37,5 @@ Outputs:
 Escalate when:
 
 - tests require changes to product semantics
-- acceptance criteria are ambiguous or conflicting
+- more than 2 acceptance checks cannot be validated with deterministic tests
+- acceptance criteria are ambiguous or conflicting after one clarification pass

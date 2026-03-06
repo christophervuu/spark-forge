@@ -17,8 +17,8 @@ F-###
 active | superseded | archived
 
 active = current foundation anchor
-superseded = replaced by a newer foundation document
-archived = no longer pursued
+superseded = replaced by a newer foundation document that becomes the active anchor
+archived = retired without a direct successor and no longer pursued
 
 ---
 

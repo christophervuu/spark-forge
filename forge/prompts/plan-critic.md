@@ -7,6 +7,10 @@ Before starting, you must read:
 /forge/CONSTITUTION.md
 /forge/AGENTS.md
 
+## Inputs Required
+
+- PACKET file: `packets/P-###-slug/PACKET.md`
+
 You may write to:
 
 /plans/impl
@@ -46,6 +50,7 @@ Delta artifact format:
 
 Escalate when:
 
-- packet semantics are ambiguous
-- acceptance examples are nondeterministic
+- packet semantics remain ambiguous after one review pass
+- more than 2 acceptance examples are nondeterministic
 - architectural decisions are required
+- resolving deltas would require edits to more than 2 task modules outside the current IMPL scope

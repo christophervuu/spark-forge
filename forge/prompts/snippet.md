@@ -9,6 +9,10 @@ Before starting, you must read:
 
 If any prompt text conflicts with `/forge/AGENTS.md` write boundaries, `/forge/AGENTS.md` is authoritative.
 
+## Inputs Required
+
+- PACKET file: `packets/P-###-slug/PACKET.md`
+
 Rules:
 
 - operate only on the provided context

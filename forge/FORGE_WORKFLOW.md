@@ -41,6 +41,8 @@ PACKET → IMPL → Plan Critic (deltas + IMPL rev bump) → Implementation Agen
 - **generate seed:** Produce a SEED from a Spark or discussion.
 - **generate foundation:** Produce a FOUNDATION from an accepted SEED.
 - **generate packet:** Produce a PACKET for a specific atomic change under a FOUNDATION.
+- **generate impl:** Produce an IMPL from a PACKET.
+- **generate tasks:** Produce TASK files and update `plans/tasks/TASKS.md` from an IMPL.
 
 ---
 
@@ -66,6 +68,8 @@ plans/impl/I-###-slug.md
 plans/tasks/P-###/T-###-##-slug.md
 plans/tasks/TASKS.md
 ```
+
+Task board schema and line format are defined in `/forge/TASK_BOARD_TEMPLATE.md`.
 
 ---
 

@@ -9,6 +9,10 @@ Before starting, you must read:
 
 If any prompt text conflicts with `/forge/AGENTS.md` write boundaries, `/forge/AGENTS.md` is authoritative.
 
+## Inputs Required
+
+- PACKET file: `packets/P-###-slug/PACKET.md`
+
 Responsibilities:
 
 - implement the task
@@ -30,6 +34,12 @@ Dependency preflight:
 If the task requires design changes:
 
 Stop and escalate.
+
+Escalate if any of the following are true:
+
+- task execution would touch more than 2 modules not listed in the task file's `## Files` section
+- required dependency tasks are incomplete or missing from `plans/tasks/TASKS.md`
+- completing the task requires more than 1 new public API surface
 
 Outputs must include:
 

@@ -9,6 +9,11 @@ Before starting, you must read:
 
 If any prompt text conflicts with `/forge/AGENTS.md` write boundaries, `/forge/AGENTS.md` is authoritative.
 
+## Inputs Required
+
+- PACKET file: `packets/P-###-slug/PACKET.md`
+- Implementation plan file: `plans/impl/I-###-slug.md` if it exists
+
 Your mission is to convert a **SEED or PACKET** into executable work.
 
 You must:
@@ -29,9 +34,10 @@ Rules:
 
 Escalate if:
 
-- semantics are unclear
+- packet semantics are unclear after one clarification pass
 - new architectural decisions are required
-- acceptance criteria conflict
+- acceptance examples reference more than 2 undefined terms
+- acceptance criteria conflict across more than 1 source artifact
 
 Outputs must include:
 

@@ -19,6 +19,51 @@ Global constraints:
 
 - `/decisions` is human-authored only. Agents may recommend ADRs but must not write under `/decisions`.
 - Acceptance checks must be deterministic (see `/forge/CONSTITUTION.md`).
+- ID allocation must follow `/forge/ID_POLICY.md`.
+- Agent and command routing must follow `/forge/ROUTING.md`.
+
+---
+
+# Design Agent
+
+Mission:
+
+Convert requirements and problem framing into deterministic design artifacts.
+
+Responsibilities:
+
+- produce SPARK artifacts
+- produce SEED artifacts
+- produce FOUNDATION artifacts
+- produce PACKET artifacts
+- keep acceptance examples deterministic and testable
+- align generated artifacts to authority hierarchy and existing decisions/specs
+
+Allowed writes:
+
+/notes/sparks
+/notes/seeds
+/foundations
+/packets
+
+Forbidden writes:
+
+/src
+/tests
+/specs
+/decisions
+/plans
+/forge
+
+Outputs:
+
+- SPARK, SEED, FOUNDATION, or PACKET markdown artifacts
+
+Escalate when:
+
+- design intent conflicts across more than 1 upstream artifact
+- architecture decisions are required
+- deterministic acceptance examples cannot be produced after one clarification pass
 
 ---
 

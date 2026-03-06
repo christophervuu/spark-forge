@@ -25,6 +25,9 @@ The lifecycle of a change is:
 SEED → FOUNDATION → PACKET → Implementation Plan → Tasks → Code → Tests
 ```
 
+ID allocation for all lifecycle artifacts must follow `/forge/ID_POLICY.md`.
+Agent command and prompt routing must follow `/forge/ROUTING.md`.
+
 Definitions:
 
 **SEED**
@@ -74,6 +77,11 @@ Responsibilities:
 | specs     | behavioral truth               |
 | src       | product implementation         |
 | tests     | verification                   |
+
+Operational policy documents:
+
+- ID allocation rules: `/forge/ID_POLICY.md`
+- Command and agent routing rules: `/forge/ROUTING.md`
 
 ---
 
@@ -158,44 +166,7 @@ Existing decisions cannot be reversed without creating a new decision record.
 
 # 6. Agent Responsibilities
 
-Agent roles, permissions, and detailed operating rules are defined in:
-
-- `/forge/AGENTS.md`
-
-## Design Phase (ChatGPT)
-
-Produces:
-
-- SEED documents
-- PACKET documents
-
-Design artifacts must be structured and deterministic.
-
----
-
-## Implementation Agent
-
-Responsibilities:
-
-- interpret SEED or PACKET documents
-- generate implementation plans
-- generate atomic task files
-- update the global task board
-
-Implementation agents must follow the allowed/forbidden writes defined in `/forge/AGENTS.md`.
-
----
-
-## Task Agent
-
-Responsibilities:
-
-- implement code changes
-- update or add tests
-- run validation
-- produce diffs
-
-Task agents must follow the allowed/forbidden writes defined in `/forge/AGENTS.md`.
+Agent roles, allowed writes, forbidden writes, and escalation rules are defined exclusively in `/forge/AGENTS.md`.
 
 ---
 
@@ -260,6 +231,8 @@ Specs must not be modified.
 
 `plans/tasks/TASKS.md` acts as the **global index of all tasks**.
 
+Its canonical line schema and board structure are defined in `/forge/TASK_BOARD_TEMPLATE.md`.
+
 It tracks:
 
 - task status
@@ -286,6 +259,13 @@ Agents must escalate when encountering:
 - tasks exceeding reasonable scope
 
 When escalation occurs, a new **PACKET** must be created to clarify intent.
+
+Escalation events must also be recorded in `notes/escalations/` using a dated markdown log entry that includes:
+
+- triggering artifact (task/impl/packet id)
+- escalation reason
+- required follow-up owner (human or agent role)
+- linked packet path once created
 
 ---
 

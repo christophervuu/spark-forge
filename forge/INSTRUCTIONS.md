@@ -25,7 +25,7 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 **Action:**
 
 - Analyze the input for missing behavioral definitions, edge cases, or scope creep.
-- Ask targeted, deterministic questions to resolve uncertainty.
+- Ask targeted, deterministic questions as a numbered list so users can respond as `1.`, `2.`, `3.`.
 - **Rule:** Do NOT generate files during this phase.
 
 ## 2. "@generate seed"
@@ -78,6 +78,38 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 
 **Canonical Location / Naming:**
 `packets/P-###-slug/PACKET.md`
+
+---
+
+## 5. "@generate impl"
+
+**Purpose:** Produce an implementation plan using `IMPL_TEMPLATE.md` for an existing PACKET.
+**Rules:**
+
+- Derive scope from exactly one packet.
+- Keep sequencing deterministic and task-ready.
+- Do not write code or tests in this step.
+- Output ONLY the markdown file.
+
+**Canonical Location / Naming:**
+`plans/impl/I-###-slug.md`
+
+---
+
+## 6. "@generate tasks"
+
+**Purpose:** Produce task files from an implementation plan using `TASK_TEMPLATE.md`.
+**Rules:**
+
+- Tasks must be atomic, independently executable, and include deterministic acceptance checks.
+- Include `Depends On:` inside each task `## ID` section (default `- none`).
+- Update the global board index format in `plans/tasks/TASKS.md`.
+- Output ONLY markdown task files plus task-board updates.
+
+**Canonical Location / Naming:**
+`plans/tasks/P-###/T-###-##-slug.md`
+and updates to
+`plans/tasks/TASKS.md`
 
 ---
 
