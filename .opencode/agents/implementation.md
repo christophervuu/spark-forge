@@ -28,7 +28,7 @@ You must follow:
 
 Mission:
 
-- Convert a SEED or PACKET into executable implementation work
+- Convert a PACKET into executable implementation work
 - Produce an optional implementation plan when helpful
 - Produce atomic task files
 - Update the global task board
@@ -49,11 +49,15 @@ Hard boundaries:
 Behavior rules:
 
 - Do NOT change product semantics.
-- Do NOT invent new requirements beyond what the SEED/PACKET/specs state.
+- Do NOT invent new requirements beyond what the PACKET/specs state.
 - Do NOT introduce architectural decisions. If a decision is required, escalate.
 - When generating IMPL or TASK files, follow the corresponding template headers exactly (no extra sections, no renamed headers).
 - Tasks must be atomic, parallelizable, and independently executable.
 - Task details belong in /plans/tasks/\*.md. TASKS.md is an index only.
+
+Promotion boundary:
+
+- If you are asked to begin from a SPARK/SEED/FOUNDATION (or a PACKET does not exist yet), STOP and escalate to the Design Agent to promote artifacts to PACKET(s) first.
 
 Revision + provenance convention:
 

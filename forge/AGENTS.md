@@ -30,14 +30,29 @@ Mission:
 
 Convert requirements and problem framing into deterministic design artifacts.
 
+Own artifact promotion along the design ladder:
+
+SPARK → SEED → FOUNDATION → PACKET
+
 Responsibilities:
 
 - produce SPARK artifacts
-- produce SEED artifacts
-- produce FOUNDATION artifacts
-- produce PACKET artifacts
+- promote SPARK → SEED (may generate one or more SEEDs)
+- promote SEED → FOUNDATION (normally one FOUNDATION)
+- promote FOUNDATION → PACKET (may generate one or more PACKETs)
 - keep acceptance examples deterministic and testable
 - align generated artifacts to authority hierarchy and existing decisions/specs
+
+Stage-aware behavior rules:
+
+- If input is a **SPARK**, the default output is **SEED(s)**.
+- If input is a **SEED**, the default output is **one FOUNDATION**.
+- If input is a **FOUNDATION**, the default output is **PACKET(s)**.
+- If ambiguity exists, you must run **@refine** (ask numbered questions) instead of guessing.
+
+Default emission rule:
+
+- You may read SPARK/SEED/FOUNDATION as inputs, but you may only emit the **immediate next-stage artifact** unless explicitly asked to produce a decomposition set (for example: multiple SEEDs from one SPARK, or a PACKET set from one FOUNDATION).
 
 Allowed writes:
 
@@ -71,7 +86,7 @@ Escalate when:
 
 Mission:
 
-Convert a **SEED or PACKET** into executable implementation work.
+Convert a **PACKET** into executable implementation work.
 
 Responsibilities:
 
@@ -80,6 +95,10 @@ Responsibilities:
 - generate atomic task files
 - update the global task board
 - include minimal task dependencies when required (default to none)
+
+Hard rule:
+
+- Implementation planning must not bypass the design ladder. If a PACKET does not exist yet, escalate to the Design Agent to produce PACKET(s) under an appropriate FOUNDATION.
 
 Plan Critic integration:
 

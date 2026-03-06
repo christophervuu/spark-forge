@@ -10,6 +10,14 @@ It is descriptive and must not contradict `/forge/CONSTITUTION.md` or `/forge/AG
 
 Use [forge/INSTRUCTIONS.md](forge/INSTRUCTIONS.md).
 
+Agent: Design Agent
+
+Promotion model:
+
+- The Design Agent is **stage-aware** and promotes artifacts along SPARK → SEED → FOUNDATION → PACKET.
+- By default, the Design Agent emits only the **immediate next-stage** artifact (unless explicitly asked to produce a decomposition set).
+- If ambiguity exists, the Design Agent must use `@refine` instead of guessing.
+
 Artifacts produced in design mode:
 
 - SPARK → `notes/sparks/SP-###-slug.md`

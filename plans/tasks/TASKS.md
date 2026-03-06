@@ -1,7 +1,7 @@
 # Global Task Board
 
 This file is the **global index of all implementation tasks**.
-Tasks are generated from SEEDs or PACKETs and stored under `plans/tasks/`.
+Tasks are generated from **Implementation Plans (IMPLs)** derived from **PACKETs** and stored under `plans/tasks/`.
 
 Canonical layout:
 
@@ -36,7 +36,7 @@ Schema rules (canonical):
 
 <!-- SEED_TASKS_START -->
 
-_No tasks yet._
+_Deprecated: tasks should be generated from IMPLs (derived from PACKETs), not directly from SEEDs._
 
 <!-- SEED_TASKS_END -->
 

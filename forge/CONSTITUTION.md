@@ -22,13 +22,21 @@ Development follows a **spec-driven, packet-first workflow**.
 The lifecycle of a change is:
 
 ```
-SEED → FOUNDATION → PACKET → Implementation Plan → Tasks → Code → Tests
+SPARK (optional) → SEED → FOUNDATION → PACKET → Implementation Plan → Tasks → Code → Tests
 ```
+
+Notes:
+
+- SPARK is supported as an upstream idea-capture artifact. When a SPARK exists, promotion must follow the design ladder (SPARK → SEED → FOUNDATION → PACKET).
+- Work may begin at SEED when a direction is already defined, but later stages must not be skipped.
 
 ID allocation for all lifecycle artifacts must follow `/forge/ID_POLICY.md`.
 Agent command and prompt routing must follow `/forge/ROUTING.md`.
 
 Definitions:
+
+**SPARK**
+Raw idea capture.
 
 **SEED**
 High-level project direction or feature concept.
@@ -236,7 +244,7 @@ Its canonical line schema and board structure are defined in `/forge/TASK_BOARD_
 It tracks:
 
 - task status
-- task origin (SEED or PACKET)
+- task origin (IMPL derived from PACKET)
 - completion state
 
 Task details must live in:

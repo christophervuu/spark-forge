@@ -33,6 +33,10 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 **Purpose:** Produce a SEED file using `SEED_TEMPLATE.md`.
 **Rules:**
 
+- This is an **artifact promotion** command (SPARK → SEED) typically executed by the **Design Agent**.
+- If the input SPARK contains multiple plausible directions, you may generate **multiple SEEDs**.
+- If ambiguity exists, use **@refine** instead of guessing.
+
 - Focus on the **Problem**, **Motivation**, and **Proposed Features**.
 - Output ONLY the markdown file. No conversational filler.
 
@@ -59,6 +63,10 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 **Purpose:** Produce a FOUNDATION file using `FOUNDATION_TEMPLATE.md`.
 **Rules:**
 
+- This is an **artifact promotion** command (SEED → FOUNDATION) typically executed by the **Design Agent**.
+- Default behavior: emit **exactly one** FOUNDATION per accepted SEED (unless explicitly requested otherwise).
+- If ambiguity exists, use **@refine** instead of guessing.
+
 - Define the minimal capability boundary and explicit non-goals.
 - Keep this stable; avoid implementation details.
 - Output ONLY the markdown file. No conversational filler.
@@ -70,6 +78,10 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 
 **Purpose:** Produce a packet file using `PACKET_TEMPLATE.md`.
 **Rules:**
+
+- This is an **artifact promotion** command (FOUNDATION → PACKET) typically executed by the **Design Agent**.
+- You may produce a single PACKET or a PACKET set, but **each PACKET must remain atomic**.
+- If ambiguity exists, use **@refine** instead of guessing.
 
 - Must represent **exactly one** atomic behavioral change.
 - Must include deterministic **Acceptance Examples** (Given/When/Then).
@@ -86,6 +98,9 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 **Purpose:** Produce an implementation plan using `IMPL_TEMPLATE.md` for an existing PACKET.
 **Rules:**
 
+- This command is used by the **Implementation Agent** and must only be run when a PACKET exists.
+- Implementation agents must not generate or modify SPARK/SEED/FOUNDATION/PACKET artifacts.
+
 - Derive scope from exactly one packet.
 - Keep sequencing deterministic and task-ready.
 - Do not write code or tests in this step.
@@ -100,6 +115,9 @@ Follow the logic defined in `FORGE_WORKFLOW.md` strictly.
 
 **Purpose:** Produce task files from an implementation plan using `TASK_TEMPLATE.md`.
 **Rules:**
+
+- This command is used by the **Implementation Agent** and must only be run from an IMPL derived from a PACKET.
+- Tasks must not be generated directly from SEEDs or FOUNDATIONs.
 
 - Tasks must be atomic, independently executable, and include deterministic acceptance checks.
 - Include `Depends On:` inside each task `## ID` section (default `- none`).

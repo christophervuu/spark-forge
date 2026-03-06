@@ -19,6 +19,48 @@ Artifacts exist as a deterministic pipeline:
 SPARK → SEED → FOUNDATION → PACKETS → IMPLEMENTATION PLAN → TASKS → CODE → TESTS
 ```
 
+Stage promotion responsibilities:
+
+```text
+SPARK
+│
+▼
+Design Agent (SPARK→SEED)
+│
+▼
+SEED
+│
+▼
+Design Agent (SEED→FOUNDATION)
+│
+▼
+FOUNDATION
+│
+▼
+Design Agent (FOUNDATION→PACKET)
+│
+▼
+PACKETS
+│
+▼
+Implementation Agent
+│
+▼
+Implementation Plan
+│
+▼
+Implementation Agent (task generation)
+│
+▼
+Tasks
+│
+▼
+Task Agent
+│
+▼
+Implementation / Code / Tests
+```
+
 Critique loop (planning only):
 
 ```text
@@ -31,6 +73,41 @@ PACKET → IMPL → Plan Critic (deltas + IMPL rev bump) → Implementation Agen
 - **Packets:** Engineering design capsules describing behavior changes (not code).
 - **Implementation Plan:** Architecture/sequencing for a packet; produces atomic tasks.
 - **Tasks:** Mechanical edits executed by task agents.
+
+---
+
+## Artifact Cardinality
+
+The Forge workflow allows branching at early stages and decomposition at later stages.
+
+| Stage | Cardinality |
+|------|-------------|
+| SPARK → SEED | One-to-Many |
+| SEED → FOUNDATION | One-to-One (normally) |
+| FOUNDATION → PACKET | One-to-Many |
+| PACKET → IMPL | One-to-One |
+| IMPL → TASKS | One-to-Many |
+
+Clarifications:
+
+- A **SPARK** represents a raw idea and may produce multiple **SEED explorations**.
+- A **SEED** represents a project direction. Once accepted it normally produces one **FOUNDATION**.
+- A **FOUNDATION** defines the stable system boundary and decomposes into multiple **PACKETS**.
+- Each **PACKET** represents exactly one atomic behavioral change.
+- Each **PACKET** generates one **Implementation Plan**.
+- Implementation Plans generate multiple **Tasks**.
+
+---
+
+## Agent Responsibility
+
+| Agent | Responsibility |
+|------|---------------|
+| Design Agent (SPARK → SEED) | Idea exploration |
+| Design Agent (SEED → FOUNDATION) | Product boundary definition |
+| Design Agent (FOUNDATION → PACKET) | Capability decomposition |
+| Implementation Agent | Plan creation + task generation |
+| Task Agent | Task execution |
 
 ---
 
