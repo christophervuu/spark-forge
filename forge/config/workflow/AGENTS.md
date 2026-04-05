@@ -1,325 +1,275 @@
-# Forge Agent Registry
+# AGENTS.md
 
-This file defines all agent roles and their responsibilities.
+## Purpose
 
-This file is the **source of truth** for:
+This repository uses Spark-Forge, a personal spec-driven development workflow for turning ideas into durable planning artifacts, executable task sets, verified implementation, and preserved work history.
 
-- agent role definitions
-- allowed/forbidden write boundaries
-- escalation thresholds
-- prompt file locations (when applicable)
+This file defines the global operating rules that any AI agent, assistant, or automated workflow must follow when working in this repository.
 
-All agents must follow the rules defined in:
-
-- `/forge/CONSTITUTION.md`
-
-Agents must operate deterministically and must respect repository boundaries.
-
-Global constraints:
-
-- `/decisions` is human-authored only. Agents may recommend ADRs but must not write under `/decisions`.
-- Acceptance checks must be deterministic (see `/forge/CONSTITUTION.md`).
-- ID allocation must follow `/forge/ID_POLICY.md`.
-- Agent and command routing must follow `/forge/ROUTING.md`.
+This file is intentionally repository-wide. It defines the shared contract for how work should be planned, approved, executed, verified, and recorded. It is not the place for agent-specific personas, model tuning, or tool-specific runtime configuration.
 
 ---
 
-# Design Agent
+## Scope
 
-Mission:
+These rules apply to all AI-assisted work performed in this repository, including:
 
-Convert requirements and problem framing into deterministic design artifacts.
+- drafting and refining specifications
+- generating tasks
+- executing approved work
+- verifying implementation
+- updating workflow artifacts
+- maintaining architecture documentation when relevant
 
-Own artifact promotion along the design ladder:
-
-SPARK → SEED → FOUNDATION → PACKET
-
-Responsibilities:
-
-- produce SPARK artifacts
-- promote SPARK → SEED (may generate one or more SEEDs)
-- promote SEED → FOUNDATION (normally one FOUNDATION)
-- promote FOUNDATION → PACKET (may generate one or more PACKETs)
-- keep acceptance examples deterministic and testable
-- align generated artifacts to authority hierarchy and existing decisions/specs
-
-Stage-aware behavior rules:
-
-- If input is a **SPARK**, the default output is **SEED(s)**.
-- If input is a **SEED**, the default output is **one FOUNDATION**.
-- If input is a **FOUNDATION**, the default output is **PACKET(s)**.
-- If ambiguity exists, you must run **@refine** (ask numbered questions) instead of guessing.
-
-Default emission rule:
-
-- You may read SPARK/SEED/FOUNDATION as inputs, but you may only emit the **immediate next-stage artifact** unless explicitly asked to produce a decomposition set (for example: multiple SEEDs from one SPARK, or a PACKET set from one FOUNDATION).
-
-Allowed writes:
-
-/notes/sparks
-/notes/seeds
-/foundations
-/packets
-
-Forbidden writes:
-
-/src
-/tests
-/specs
-/decisions
-/plans
-/forge
-
-Outputs:
-
-- SPARK, SEED, FOUNDATION, or PACKET markdown artifacts
-
-Escalate when:
-
-- design intent conflicts across more than 1 upstream artifact
-- architecture decisions are required
-- deterministic acceptance examples cannot be produced after one clarification pass
+If a tool-specific configuration or agent prompt exists elsewhere, it must remain consistent with this file.
 
 ---
 
-# Implementation Agent
+## Canonical Workflow Documents
 
-Mission:
+The following documents define the Spark-Forge operating model and should be treated as authoritative when present:
 
-Convert a **PACKET** into executable implementation work.
+- `WORKFLOW.md`
+- `SPEC_TEMPLATE.md`
+- `TASK_TEMPLATE.md`
 
-Responsibilities:
+If additional workflow, approval, status, architecture, or template documents exist, those documents should be treated as authoritative within their own defined scope.
 
-- interpret design artifacts
-- produce implementation plans when necessary
-- generate atomic task files
-- update the global task board
-- include minimal task dependencies when required (default to none)
-
-Hard rule:
-
-- Implementation planning must not bypass the design ladder. If a PACKET does not exist yet, escalate to the Design Agent to produce PACKET(s) under an appropriate FOUNDATION.
-
-Plan Critic integration:
-
-- If an IMPL has an associated Plan Critic delta artifact, you must apply the deltas by regenerating/updating tasks and updating `plans/tasks/TASKS.md`.
-- Task regeneration must reflect the latest IMPL revision.
-
-Allowed writes:
-
-/plans/impl
-/plans/tasks
-/plans/tasks/TASKS.md
-
-Forbidden writes:
-
-/src
-/tests
-/specs
-/decisions
-/forge
-
-Outputs:
-
-- Implementation plan (optional)
-- One or more task files
-- Updates to TASKS.md
-
-Escalate when:
-
-- packet semantics are ambiguous
-- architecture decisions are required
-- acceptance criteria conflict
+If repository artifacts conflict with one another, the inconsistency should be surfaced explicitly rather than silently worked around.
 
 ---
 
-# Plan Critic Agent
+## Core Operating Principles
 
-Mission:
+### 1. Spec-Driven Work
 
-Review **Implementation Plans (IMPL)** and **Tasks** for determinism and execution quality.
+All meaningful work should begin with a durable specification.
 
-Responsibilities:
+The spec is the primary planning artifact for a work item. It defines the problem, goals, scope, constraints, assumptions, expected behavior, and other planning context required to support safe implementation.
 
-- review IMPLs for template fidelity, clarity, sequencing, and missing test strategy
-- review task sets for atomicity, parallelizability, and deterministic acceptance checks
-- review task dependency declarations for correctness (missing deps, redundant deps, cycles)
-- propose task-level deltas (add/edit/split/delete) without directly editing task files
-- bump the IMPL revision when proposing changes
+Tasks are derived from the spec. Tasks do not replace the spec.
 
-Delta artifact format:
+### 2. Plan Before Execution
 
-- Write a delta file under `/plans/impl` named: `I-###-revN-deltas.md`
-- The delta file must be deterministic and use only these operations:
-  - ADD TASK: <title> (parallelizable: Y/N) — <primary acceptance check>
-  - EDIT TASK: T-###-## — <what to change>
-  - SPLIT TASK: T-###-## → (<new task titles/ids>)
-  - DELETE TASK: T-###-## — <reason>
-- Do not include speculative discussion; stick to actionable deltas.
+Agents must not jump directly from idea to implementation when the work is expected to move through Spark-Forge.
 
-Allowed writes:
+Before execution begins, the work should have:
 
-/plans/impl
+- a current spec
+- a current task set derived from that spec
+- approval of the current planning package when the workflow requires approval
 
-Forbidden writes:
+### 3. One Planning Package
 
-/plans/tasks
-/src
-/tests
-/specs
-/decisions
-/forge
+The planning package consists of:
 
-Outputs:
+- the current spec
+- the current task set
 
-- Updated IMPL (including revision bump)
-- Task Delta review artifact in /plans/impl (patch list)
+When approval is required, approval applies to the planning package as a whole unless a narrower approved subset is explicitly recorded.
 
-Application rule:
+### 4. Explicitness Over Guessing
 
-- The Implementation Agent is responsible for applying deltas and regenerating tasks. The Plan Critic must not edit `/plans/tasks`.
+Ambiguity, missing context, conflicting constraints, and uncertain scope must be surfaced explicitly.
 
-Escalate when:
+Agents should not silently invent missing requirements, implementation context, or approval outcomes.
 
-- packet semantics are ambiguous
-- acceptance examples are nondeterministic
-- architecture decisions are required
+### 5. Durable Artifacts Over Chat-Only Decisions
+
+Important planning, approval, execution, and verification outcomes should be reflected in durable repository artifacts where practical.
+
+The repository should not depend on hidden conversational context as the sole source of workflow truth.
+
+### 6. Verification Before Completion
+
+Work is not complete simply because implementation appears finished.
+
+Completion requires verification against the approved planning package.
+
+Verification may include tests, builds, lint, typecheck, deterministic checks, or other explicit validation appropriate to the work.
 
 ---
 
-# Test Author Agent
+## Workflow Rules
 
-Mission:
+### 1. Idea to Spec
 
-Improve test rigor by authoring tests from PACKET acceptance examples and/or IMPL Test Strategy.
+A new request, idea, feature, improvement, or bug fix should be converted into a durable spec before meaningful execution begins.
 
-Responsibilities:
+### 2. Context Loading
 
-- add or strengthen tests to cover acceptance examples
-- keep tests deterministic and directly tied to acceptance checks
-- avoid changing implementation behavior unless explicitly delegated
+When the work affects an existing repository, subsystem, implementation surface, or architecture area, agents should load relevant context before treating the plan as ready.
 
-Allowed writes:
+Context loading may include:
 
-/tests
+- inspecting related files
+- identifying likely touchpoints
+- understanding current behavior
+- checking conventions or constraints
+- identifying architecture implications
 
-Forbidden writes:
+### 3. Refinement
 
-/src
-/forge
-/specs
-/plans
-/decisions
+Specs may be refined iteratively.
 
-Outputs:
+Refinement should:
 
-- test additions/updates
-- execution report
+- tighten scope
+- resolve inconsistencies
+- clarify requirements
+- make assumptions explicit
+- defer non-critical unknowns clearly when appropriate
 
-Escalate when:
+### 4. Task Generation
 
-- tests require changes to product semantics
-- acceptance criteria are ambiguous or conflicting
+Tasks must be generated from the current spec.
 
----
+Tasks should be:
 
-# Review Agent
+- atomic enough to execute safely
+- specific enough to act on directly
+- aligned to the approved scope
+- explicit about expected validation or verification where relevant
 
-Mission:
+### 5. Approval Boundary
 
-Perform an advisory PR-style review for compliance and minimal diffs.
+When the workflow uses approval, execution must not begin until the current planning package has been approved.
 
-Responsibilities:
+Approval of the planning package authorizes execution of the approved task set against the approved spec.
 
-- review diffs for constitution/decision/spec/packet compliance
-- flag scope creep, hidden semantics changes, or missing packets/decisions
-- suggest risk areas and targeted follow-ups
+Approval does not authorize:
 
-Allowed writes:
+- work outside approved scope
+- silent scope expansion
+- bypassing verification
+- continuing with stale tasks after material planning changes
 
-(none)
+### 6. Drift and Material Change
 
-Forbidden writes:
+If the spec changes after tasks are created, agents must evaluate whether the tasks have drifted from the current spec.
 
-all
+If a change is material, affected tasks should be revised or regenerated before execution continues.
 
-Outputs:
+If execution reveals a material issue in the approved plan, the workflow should return to refinement rather than improvising unapproved scope changes.
 
-- advisory review report (chat output)
+### 7. Verification
 
-Escalate when:
+After execution, the implementation should be verified against the approved planning package.
 
-- changes violate the authority hierarchy
-- a new packet/decision is required
+If verification fails:
 
----
+- the work remains active
+- remediation is required
+- execution and verification may repeat until the approved scope is satisfied
 
-# Task Agent
+### 8. Completion
 
-Mission:
+A work item should be considered complete only when:
 
-Execute a **single task file**.
-
-Responsibilities:
-
-- implement code
-- add or update tests
-- produce minimal diffs
-- do not execute a task whose declared dependencies are not complete
-
-Allowed writes:
-
-/src
-/tests
-
-Forbidden writes:
-
-/forge
-/specs
-/decisions
-/plans
-
-Outputs:
-
-- code changes
-- test updates
-- execution report
-
-Escalate when:
-
-- task requires architectural change
-- task scope is unclear
-- specs conflict with packet intent
+- the planning package is current and approved where required
+- execution for the approved scope is complete
+- verification has passed
 
 ---
 
-# Snippet Agent
+## Artifact Expectations
 
-Mission:
+### Specification
 
-Perform **small localized edits**.
+The spec should remain the primary source of planning truth for the work item.
 
-Responsibilities:
+It should define enough context to explain:
 
-- apply minimal code fixes
-- correct small issues
-- avoid scope expansion
+- what is changing
+- why it is changing
+- what is in scope
+- what is out of scope
+- what behavior is expected
+- what constraints or assumptions matter
 
-Allowed writes:
+### Tasks
 
-/src
-/tests
+Tasks should be execution-facing artifacts derived from the current spec.
 
-Forbidden writes:
+Tasks should not become informal replacement specs.
 
-/forge
-/specs
-/decisions
-/plans
+### Workflow and Template Documents
 
-Escalate when:
+Workflow docs and templates should remain stable enough to support consistent authoring and downstream automation.
 
-- more than 3 files would change
-- more than 50 LOC would be modified (approximate; if unsure, escalate)
-- fix requires a non-local refactor or architectural decision
-- architectural decisions are required
+Agents should not casually rename required sections, remove required structure, or introduce incompatible formatting in canonical templates.
+
+---
+
+## Execution Discipline
+
+Agents performing implementation work must:
+
+- stay within approved scope
+- use the current spec and current tasks as execution inputs
+- surface blockers or inconsistencies explicitly
+- avoid hidden scope expansion
+- preserve alignment between implementation and planning artifacts
+
+If the implementation needs to diverge materially from the approved plan, the plan should be revised first.
+
+---
+
+## Architecture Rule
+
+Architecture updates should be treated as deliberate documentation work, not incidental side effects.
+
+If a work item has architecture impact, the architecture implications should be identified explicitly.
+
+Where a separate architecture agent or architecture workflow exists, architecture documentation updates should be delegated to that path rather than mixed implicitly into unrelated planning or execution work.
+
+Architecture documents should remain consistent with:
+
+- approved direction
+- actual repository structure
+- implemented behavior when the work is complete
+
+---
+
+## Status and Recordkeeping Guidance
+
+If the repository uses explicit statuses, approval logs, revision logs, verification records, or work history, agents should keep those records aligned with actual workflow state.
+
+Agents must not:
+
+- mark work complete before verification passes
+- represent unapproved work as approved
+- preserve stale approvals after material change
+- hide workflow rollback when rework is needed
+
+---
+
+## What This File Should Not Contain
+
+This file should not be used for:
+
+- agent-specific personas
+- tool-specific runtime configuration
+- model selection or temperature settings
+- provider-specific syntax
+- long task-specific playbooks
+- duplicated copies of detailed workflow docs better maintained elsewhere
+
+Those concerns should live in the appropriate tool configuration, agent definition, or workflow document.
+
+---
+
+## Practical Default Behavior
+
+Unless a more specific repository rule overrides this behavior, agents should default to the following:
+
+1. understand the request
+2. create or refine the spec
+3. load context when relevant
+4. generate or revise tasks from the current spec
+5. request or respect approval when required
+6. execute only against the current approved plan
+7. verify results
+8. preserve durable workflow truth in repository artifacts
+
+Spark-Forge should remain structured, explicit, revision-aware, and practical for real use.
