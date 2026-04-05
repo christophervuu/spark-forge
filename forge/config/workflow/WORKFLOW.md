@@ -4,11 +4,11 @@
 
 Spark-Forge is a personal spec-driven development workflow for turning ideas into clear, executable implementation plans.
 
-The purpose of this workflow is to make development more deliberate, reviewable, and consistent by requiring work to be expressed first as a specification and then as a set of concrete tasks before implementation begins. Instead of moving directly from idea to code, Spark-Forge creates a lightweight planning layer that helps define scope, clarify intent, surface ambiguity, and reduce avoidable rework.
+The purpose of this workflow is to make development more deliberate, reviewable, and consistent by requiring work to be expressed first as a specification and then as a set of concrete tasks before implementation begins.
 
-In this workflow, the spec is the primary planning artifact. It captures the problem, goals, scope, constraints, assumptions, and expected behavior of the work item. Tasks are then derived from the spec and translate the approved plan into atomic execution steps. Together, the spec and task set form the planning package that is reviewed before execution begins.
+In this workflow, the spec is the primary planning artifact. It captures the problem, goals, scope, constraints, assumptions, and expected behavior of the work item. Tasks are then derived from the spec and used as the execution layer of the approved plan.
 
-This workflow is intended to support both exploratory feature work and changes to existing systems. When work touches an existing repository or subsystem, the planning process should be grounded in actual repository context before execution. When plans change materially, the workflow should make those changes explicit rather than allowing execution to drift silently away from the approved plan.
+This workflow is intended to support both exploratory feature work and changes to existing systems. When work touches an existing repository or subsystem, the planning process should be grounded in actual repository context rather than assumptions.
 
 The goals of Spark-Forge are to:
 
@@ -20,6 +20,45 @@ The goals of Spark-Forge are to:
 - require verification before work is considered complete
 
 Spark-Forge is designed to be structured without becoming heavyweight. It should provide enough discipline to improve planning and execution quality while remaining practical for personal use.
+
+---
+
+## Repository Structure
+
+This repository has a defined workflow structure. That structure is part of the operating model and should be treated as authoritative.
+
+```text
+forge/
+  config/
+    workflow/
+      AGENTS.md
+      WORKFLOW.md
+    templates/
+      SPEC_TEMPLATE.md
+      TASK_TEMPLATE.md
+```
+
+### Structure Rules
+
+- `forge/config/workflow/AGENTS.md` defines repository-wide agent operating rules.
+- `forge/config/workflow/WORKFLOW.md` defines the Spark-Forge workflow itself.
+- `forge/config/templates/SPEC_TEMPLATE.md` is the canonical specification template.
+- `forge/config/templates/TASK_TEMPLATE.md` is the canonical task template.
+- The repository structure shown above is not an example or recommendation; it is the expected structure for this repository.
+- Workflow-aware agents must preserve this structure unless an explicitly approved repository change says otherwise.
+- New workflow documents, examples, templates, approval records, verification records, or related artifacts should be added in a way that remains consistent with this structure.
+- If future workflow artifacts are introduced, their placement should be deliberate, documented, and consistent with the existing `forge/config/` layout.
+
+### Artifact Placement Guidance
+
+When adding supporting workflow documentation, agents should keep responsibilities clear:
+
+- workflow rules belong under `forge/config/workflow/`
+- canonical templates belong under `forge/config/templates/`
+- repository-wide guidance should not be scattered across unrelated directories
+- new documents should not duplicate canonical content without a clear reason
+
+This repository should remain predictable enough that a person or automation can locate the governing workflow documents without guesswork.
 
 ---
 
@@ -306,6 +345,85 @@ Completed work should preserve the durable planning record so the original reque
 
 ---
 
+## Artifact Lifecycle and State Alignment
+
+Workflow artifacts should move through the workflow in a way that keeps document state aligned with actual work state.
+
+### Spec State Expectations
+
+A spec will typically move through these statuses:
+
+- `draft`
+- `refining`
+- `ready`
+- `in_progress`
+- `completed`
+- `archived`
+
+Typical interpretation:
+
+- `draft` means the spec exists but has not yet been meaningfully refined
+- `refining` means open questions, repo grounding, or scope clarification are still active
+- `ready` means the spec is planning-ready and suitable for task generation or approval
+- `in_progress` means approved work tied to the spec is being executed
+- `completed` means implementation and verification have succeeded for the approved scope
+- `archived` means the spec has been retired, superseded, or preserved as historical record
+
+### Task State Expectations
+
+A task will typically move through these statuses:
+
+- `todo`
+- `in_progress`
+- `blocked`
+- `done`
+
+Typical interpretation:
+
+- `todo` means approved but not started
+- `in_progress` means actively being executed
+- `blocked` means progress cannot continue due to a real dependency or unresolved issue
+- `done` means implementation and task-level verification have been completed
+
+Status changes should reflect real workflow state, not aspirational state.
+
+---
+
+## Revision and Drift Handling
+
+Revision awareness is required to keep the planning package trustworthy.
+
+### Spec Revision Expectations
+
+A spec revision should be bumped when material changes affect items such as:
+
+- intended behavior
+- scope boundaries
+- acceptance examples
+- verification expectations
+- materially affected system areas
+
+### Task Alignment Expectations
+
+Tasks should remain aligned to the spec revision they were generated from or last reviewed against.
+
+If the spec changes:
+
+- tasks should be reviewed for drift
+- unchanged tasks may remain valid if still aligned
+- materially affected tasks should be revised or regenerated
+- execution should not continue from stale tasks when material drift exists
+
+### Approval Freshness
+
+If a material planning change occurs after approval:
+
+- previous approval should be treated as stale for the affected scope
+- the planning package should be updated
+- approval should be requested again before execution continues on the affected area
+
+---
+
 ## Roles & Responsibilities
 
 ### Human / Approver
@@ -393,6 +511,7 @@ Templates should remain stable enough to support consistent drafting and downstr
 - Return to refinement when material changes appear.
 - Require verification before considering work complete.
 - Preserve planning, approval, and verification history in durable form when practical.
+- Keep repository workflow structure stable and predictable.
 
 ---
 
@@ -425,3 +544,7 @@ Return to refinement. Update the spec and tasks as needed, then request approval
 ### When is work considered complete?
 
 Work is complete only after the approved scope has been implemented and verification has passed.
+
+### Is the repository structure optional?
+
+No. The workflow-related repository structure documented in this file is part of the repository contract and should be treated as authoritative unless an explicit repository change updates it.
