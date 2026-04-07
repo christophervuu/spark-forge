@@ -30,12 +30,14 @@ draft | refining | ready | in_progress | completed | archived
 
 - `draft` = initial spec created, not yet refined
 - `refining` = questions, tradeoffs, or repo grounding still being resolved
-- `ready` = approved for task generation
+- `ready` = refined enough for reliable task generation and planning review
 - `in_progress` = one or more tasks are being executed
 - `completed` = implementation and verification finished
 - `archived` = retired, replaced, or no longer relevant
 
 This status tracks the overall lifecycle of the change, not just document editing.
+
+This spec becomes part of the planning package together with its derived task set.
 
 ---
 
@@ -99,12 +101,7 @@ Describe the current system or workflow context relevant to this change.
 
 Focus on what a task executor needs to know to understand why the current state is being changed — not a general system overview.
 
-This may include:
-- current user flow
-- current system behavior
-- relevant limitations
-- existing related components or patterns
-- repo findings or architectural constraints
+When the work affects an existing repository surface, this section should reflect actual repository findings, conventions, constraints, and relevant workflow structure rather than assumptions.
 
 ---
 
@@ -264,12 +261,9 @@ Describe how this work should be decomposed into atomic tasks.
 
 This section should guide decomposition, sequencing, and risk isolation. It must not become a hidden implementation plan or checklist.
 
-This may include:
-- suggested task boundaries
-- sequencing constraints
-- parallelizable areas
-- risky areas that should remain isolated
-- acceptance examples that should stay grouped together
+Tasks should be generated from the current revision of this spec.
+
+If this spec changes materially after tasks are created, affected tasks should be reviewed for drift and revised or regenerated as needed.
 
 ---
 

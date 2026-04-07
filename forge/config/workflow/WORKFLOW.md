@@ -1,4 +1,4 @@
-# WORKFLOW
+# WORKFLOW.md
 
 ## Overview
 

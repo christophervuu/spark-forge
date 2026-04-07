@@ -6,7 +6,7 @@ This repository uses Spark-Forge, a personal spec-driven development workflow fo
 
 This file defines the global operating rules that any AI agent, assistant, or automated workflow must follow when working in this repository.
 
-This file is intentionally repository-wide. It defines the shared contract for how work should be planned, approved, executed, verified, and recorded. It is not the place for agent-specific personas, model tuning, or tool-specific runtime configuration.
+This file is intentionally repository-wide. It defines the shared contract for how work should be planned, approved, executed, verified, and recorded. It is not the place for agent-specific personas, tool-specific runtime tuning, or provider-specific configuration.
 
 ---
 
@@ -32,6 +32,8 @@ The following documents define the Spark-Forge operating model and should be tre
 - `WORKFLOW.md`
 - `SPEC_TEMPLATE.md`
 - `TASK_TEMPLATE.md`
+
+`WORKFLOW.md` is the authoritative workflow document for process, repository workflow structure, and artifact placement expectations.
 
 If additional workflow, approval, status, architecture, or template documents exist, those documents should be treated as authoritative within their own defined scope.
 
@@ -87,6 +89,12 @@ Work is not complete simply because implementation appears finished.
 Completion requires verification against the approved planning package.
 
 Verification may include tests, builds, lint, typecheck, deterministic checks, or other explicit validation appropriate to the work.
+
+### 7. Repository Workflow Structure Is Authoritative
+
+The workflow-related repository structure defined in `WORKFLOW.md` is part of this repository's operating contract.
+
+Agents must treat that structure as authoritative, preserve it during workflow-related changes, and avoid introducing conflicting workflow layouts or duplicate canonical artifacts in unrelated locations unless an explicitly approved repository change says otherwise.
 
 ---
 
@@ -170,6 +178,17 @@ A work item should be considered complete only when:
 - execution for the approved scope is complete
 - verification has passed
 
+### 9. Repository Structure Preservation
+
+When agents create, revise, or add workflow-related artifacts, they must keep those artifacts aligned with the authoritative repository structure described in `WORKFLOW.md`.
+
+Agents must not:
+
+- treat the structure as optional guidance
+- relocate canonical workflow documents casually
+- duplicate canonical templates in unrelated directories without explicit reason
+- introduce alternate workflow roots that create ambiguity about repository truth
+
 ---
 
 ## Artifact Expectations
@@ -198,6 +217,8 @@ Tasks should not become informal replacement specs.
 Workflow docs and templates should remain stable enough to support consistent authoring and downstream automation.
 
 Agents should not casually rename required sections, remove required structure, or introduce incompatible formatting in canonical templates.
+
+Workflow docs and templates must remain in their defined `forge/config` locations unless an explicitly approved repository change updates that structure.
 
 ---
 
@@ -242,6 +263,8 @@ Agents must not:
 - preserve stale approvals after material change
 - hide workflow rollback when rework is needed
 
+Workflow-related records should also remain structurally consistent with the repository workflow layout defined in `WORKFLOW.md`.
+
 ---
 
 ## What This File Should Not Contain
@@ -271,5 +294,6 @@ Unless a more specific repository rule overrides this behavior, agents should de
 6. execute only against the current approved plan
 7. verify results
 8. preserve durable workflow truth in repository artifacts
+9. preserve the authoritative repository workflow structure
 
 Spark-Forge should remain structured, explicit, revision-aware, and practical for real use.

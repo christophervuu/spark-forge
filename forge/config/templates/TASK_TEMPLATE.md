@@ -37,9 +37,11 @@ Source spec this task implements.
 
 Rev: #
 
-Revision of the source spec this task was generated from or last aligned to.
+Revision of the source spec this task was generated from or last reviewed against.
 
 This helps detect drift if the spec changes after task creation.
+
+If the spec changes materially, this task must be reviewed for drift before execution continues.
 
 ---
 
@@ -47,12 +49,12 @@ This helps detect drift if the spec changes after task creation.
 
 todo | in_progress | blocked | done
 
-- `todo` = approved but not started
+- `todo` = created and not yet started
 - `in_progress` = currently being executed
 - `blocked` = cannot proceed due to a hard dependency or unresolved issue
 - `done` = implementation and task-level verification complete
 
-A task should not be marked `done` until all `Acceptance Checks` are satisfied.
+A task should not be marked `done` until its scoped implementation is complete, required verification has been performed, and all `Acceptance Checks` are satisfied.
 
 ---
 
@@ -191,5 +193,4 @@ Use this for:
 - repo-specific context
 - temporary constraints
 - clarification when `Implements` is partial or indirect
-
-Avoid dumping general project context that belongs in the spec.
+- drift notes when the spec revision changed and the task was reviewed for continued alignment
