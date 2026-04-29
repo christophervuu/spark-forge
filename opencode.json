@@ -1,4 +1,21 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "spec"
+  "default_agent": "spec",
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
+      "enabled": true
+    },
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": true
+    },
+    "tavily": {
+      "type": "remote",
+      "url": "https://mcp.tavily.com/mcp/?tavilyApiKey=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",
+      "enabled": true
+    }
+  }
 }
