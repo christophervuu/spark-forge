@@ -45,6 +45,19 @@ If the spec changes materially, this task must be reviewed for drift before exec
 
 ---
 
+## Agent
+
+task | ui-task
+
+Declares which agent should execute this task.
+
+- `task` = general implementation work (engine, backend, workflow, config)
+- `ui-task` = React component and UI surface work
+
+For cross-cutting specs, individual tasks may differ. The agent declared here is the executor for this task only.
+
+---
+
 ## Status
 
 todo | in_progress | blocked | done

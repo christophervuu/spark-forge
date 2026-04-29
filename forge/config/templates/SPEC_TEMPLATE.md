@@ -18,9 +18,12 @@ Assigned sequentially. `FS` = Feature Spec.
 Owner: @name-or-team  
 Reviewers: @name-or-team  
 Created: YYYY-MM-DD  
-Last Updated: YYYY-MM-DD
+Last Updated: YYYY-MM-DD  
+Type: ui | engine | backend | workflow | cross-cutting
 
 If unknown during early drafting, use `TBD`.
+
+`Type` indicates the primary execution domain. Used to route tasks to the correct agent (`task` or `ui-task`). Cross-cutting specs may produce tasks of mixed types — declare the type per task in that case.
 
 ---
 
@@ -260,6 +263,8 @@ Prefer mapping verification back to acceptance example IDs where practical.
 Describe how this work should be decomposed into atomic tasks.
 
 This section should guide decomposition, sequencing, and risk isolation. It must not become a hidden implementation plan or checklist.
+
+Where the spec is `cross-cutting`, note which tasks are `ui` type and which are `engine` or `backend` type so agents are routed correctly.
 
 Tasks should be generated from the current revision of this spec.
 
