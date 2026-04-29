@@ -19,10 +19,6 @@ T-##
 
 Assigned sequentially within the spec's `tasks/` folder.
 
-Example:
-- `T-01`
-- `T-02`
-
 ---
 
 ## Spec
@@ -39,9 +35,7 @@ Rev: #
 
 Revision of the source spec this task was generated from or last reviewed against.
 
-This helps detect drift if the spec changes after task creation.
-
-If the spec changes materially, this task must be reviewed for drift before execution continues.
+If the spec changes materially, review this task for drift before continuing execution.
 
 ---
 
@@ -49,12 +43,8 @@ If the spec changes materially, this task must be reviewed for drift before exec
 
 task | ui-task
 
-Declares which agent should execute this task.
-
-- `task` = general implementation work (engine, backend, workflow, config)
+- `task` = engine, backend, workflow, config, or architecture work
 - `ui-task` = React component and UI surface work
-
-For cross-cutting specs, individual tasks may differ. The agent declared here is the executor for this task only.
 
 ---
 
@@ -62,18 +52,18 @@ For cross-cutting specs, individual tasks may differ. The agent declared here is
 
 todo | in_progress | blocked | done
 
-- `todo` = created and not yet started
+- `todo` = created, not yet started
 - `in_progress` = currently being executed
-- `blocked` = cannot proceed due to a hard dependency or unresolved issue
-- `done` = implementation and task-level verification complete
+- `blocked` = cannot proceed; re-run with blocker context or return to refinement if the spec is wrong
+- `done` = implementation and task-level verification complete, all Acceptance Checks satisfied
 
-A task should not be marked `done` until its scoped implementation is complete, required verification has been performed, and all `Acceptance Checks` are satisfied.
+A task must not be marked `done` until all `Acceptance Checks` are satisfied.
 
 ---
 
 ## Depends On
 
-List hard prerequisite task IDs that must complete first.
+List hard prerequisite task IDs that must complete before this task begins.
 
 If none:
 - none
@@ -88,7 +78,7 @@ Examples:
 - `AE-01`
 - `AE-03`
 
-If the task does not map cleanly to a single example, list the nearest relevant IDs and explain the relationship in `Notes`.
+If the task does not map cleanly to a single example, list the nearest relevant IDs and explain in `Notes`.
 
 ---
 
@@ -96,7 +86,7 @@ If the task does not map cleanly to a single example, list the nearest relevant 
 
 1-3 sentences describing the concrete change this task will make and why it exists.
 
-Focus on the observable development outcome of this task, not general project context.
+Focus on the observable development outcome, not general project context.
 
 ---
 
@@ -118,14 +108,14 @@ Use this to keep the task atomic and prevent nearby cleanup from leaking in.
 
 List the files, modules, services, UI surfaces, or test areas likely involved.
 
-This list is guidance, not an exhaustive boundary.
+Cross-reference `forge/architecture/project-structure.md` to confirm file placement before implementation begins.
 
 Mark uncertain entries with `?` if confidence is low.
 
 Examples:
-- `apps/web/src/features/mapping-studio/*`
-- `packages/schema-import/normalize.ts`
-- `apps/web/src/features/mapping-studio/__tests__/*`
+- `src/engine/dsl/parser.ts`
+- `ui/src/features/mappings/MappingEditor.tsx`
+- `tests/engine/dsl/parser.test.ts ?`
 
 ---
 
@@ -150,17 +140,12 @@ Do not turn this into step-by-step implementation instructions.
 
 Describe the tests, validation steps, and quality checks required to verify this task.
 
-Include both:
-- tests to add or update
-- non-test verification expectations when relevant
-
 This may include:
 - unit tests
 - integration tests
 - end-to-end tests
 - lint / typecheck / build expectations
 - manual verification steps
-- logs, metrics, or output checks
 
 Where practical, map verification back to `AE-##` IDs.
 
@@ -168,29 +153,22 @@ Where practical, map verification back to `AE-##` IDs.
 
 ## Acceptance Checks
 
-List deterministic checks that must be true before this task can be marked `done`.
+List deterministic checks that must all be true before this task can be marked `done`.
 
 These are the task completion gate.
 
 Examples:
-- targeted tests covering `AE-01` and `AE-02` pass
+- tests covering `AE-01` and `AE-02` pass
 - typecheck passes for touched areas
-- mapping studio renders selected source and target schemas on load
-- invalid pasted JSON is rejected with the expected validation state
-
-These should be task-level completion checks, not broad project goals.
+- mapping studio renders selected schemas on load
+- invalid JSON input is rejected with the expected validation state
+- `forge/architecture/project-structure.md` updated if new files or folders were created
 
 ---
 
 ## Blockers / Risks
 
 List anything that could prevent completion or create meaningful execution risk.
-
-Examples:
-- depends on unresolved schema normalization behavior
-- blocked by `T-02`
-- backend contract may not expose required target metadata
-- existing tests are brittle in touched area
 
 If none:
 - none

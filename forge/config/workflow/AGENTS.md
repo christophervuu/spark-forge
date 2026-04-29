@@ -6,7 +6,7 @@ This repository uses Spark-Forge, a personal spec-driven development workflow fo
 
 This file defines the global operating rules that any AI agent, assistant, or automated workflow must follow when working in this repository.
 
-This file is intentionally repository-wide. It defines the shared contract for how work should be planned, approved, executed, verified, and recorded. It is not the place for agent-specific personas, model configuration, or tool-specific runtime settings — those belong in the individual agent definition files under `.opencode/agents/`.
+This file is intentionally repository-wide. It defines the shared contract for how work should be planned, executed, verified, and recorded. It is not the place for agent-specific personas, model configuration, or tool-specific runtime settings — those belong in `.opencode/agents/`.
 
 ---
 
@@ -33,9 +33,7 @@ The following documents define the Spark-Forge operating model and should be tre
 - `SPEC_TEMPLATE.md`
 - `TASK_TEMPLATE.md`
 
-`WORKFLOW.md` is the authoritative workflow document for process, repository workflow structure, and artifact placement expectations.
-
-If additional workflow, approval, status, architecture, or template documents exist, those documents should be treated as authoritative within their own defined scope.
+`WORKFLOW.md` is the authoritative document for process, repository structure, and artifact placement.
 
 If repository artifacts conflict with one another, the inconsistency should be surfaced explicitly rather than silently worked around.
 
@@ -43,9 +41,9 @@ If repository artifacts conflict with one another, the inconsistency should be s
 
 ## Architecture Reference Documents
 
-Projects may define architecture reference documents under `forge/architecture/`. These are grounding documents — stable, distilled references that give agents the context needed to plan and execute work without relying on conversational memory.
+Projects may define architecture reference documents under `forge/architecture/`. These are grounding documents — stable, distilled references that give agents the context needed to plan and execute accurately.
 
-The entry point is always `forge/architecture/INDEX.md`. This file lists every architecture document in the project, what it covers, and when it was last updated. Agents should load `INDEX.md` first, then load the specific documents relevant to their task.
+The entry point is always `forge/architecture/INDEX.md`. This file lists every architecture document in the project, what it covers, and when it was last updated. Agents should load `INDEX.md` first, then load specific documents relevant to their work area.
 
 When architecture reference documents exist, agents should:
 
@@ -54,9 +52,9 @@ When architecture reference documents exist, agents should:
 - treat them as authoritative context for the project's conventions, constraints, and system model
 - not modify them as a side effect of planning or execution work unless an explicit architecture task authorizes it
 
-Architecture documents are reference material. They do not replace specs or tasks.
+The one exception is `forge/architecture/project-structure.md` — this document is updated in-place by task and ui-task agents as a lightweight side update whenever a task creates files or folders not yet reflected in it. This does not require a separate architecture task.
 
-If a work item requires changes to architecture documentation, that must be an explicit, scoped task — not an incidental update made during implementation.
+Architecture documents are reference material. They do not replace specs or tasks.
 
 ---
 
@@ -72,13 +70,12 @@ Tasks are derived from the spec. Tasks do not replace the spec.
 
 ### 2. Plan Before Execution
 
-Agents must not jump directly from idea to implementation when the work is expected to move through Spark-Forge.
+Agents must not jump directly from idea to implementation.
 
 Before execution begins, the work should have:
 
 - a current spec
 - a current task set derived from that spec
-- approval of the current planning package when the workflow requires approval
 
 ### 3. One Planning Package
 
@@ -87,23 +84,21 @@ The planning package consists of:
 - the current spec
 - the current task set
 
-When approval is required, approval applies to the planning package as a whole unless a narrower approved subset is explicitly recorded.
-
 ### 4. Explicitness Over Guessing
 
 Ambiguity, missing context, conflicting constraints, and uncertain scope must be surfaced explicitly.
 
-Agents should not silently invent missing requirements, implementation context, or approval outcomes.
+Agents should not silently invent missing requirements, implementation context, or decisions.
 
 ### 5. Draft First, Surface Gaps
 
-The spec agent should produce a draft immediately from whatever input is provided. Gaps, unknowns, and ambiguities are captured in the `Open Questions` section of the spec — not used as a gate before drafting begins.
+The spec agent should produce a draft immediately from whatever input is provided. Gaps, unknowns, and ambiguities are captured in the `Open Questions` section of the spec — not used as a gate before drafting.
 
 The one exception: if the input is so thin that no meaningful draft can be produced, the agent should ask one focused question to establish the minimum required context. This should be rare.
 
 ### 6. Durable Artifacts Over Chat-Only Decisions
 
-Important planning, approval, execution, and verification outcomes should be reflected in durable repository artifacts where practical.
+Important planning, execution, and verification outcomes should be reflected in durable repository artifacts where practical.
 
 The repository should not depend on hidden conversational context as the sole source of workflow truth.
 
@@ -111,7 +106,7 @@ The repository should not depend on hidden conversational context as the sole so
 
 Work is not complete simply because implementation appears finished.
 
-Completion requires verification against the approved planning package.
+Completion requires verification against the planning package.
 
 Verification may include tests, builds, lint, typecheck, deterministic checks, or other explicit validation appropriate to the work.
 
@@ -119,7 +114,7 @@ Verification may include tests, builds, lint, typecheck, deterministic checks, o
 
 The workflow-related repository structure defined in `WORKFLOW.md` is part of this repository's operating contract.
 
-Agents must treat that structure as authoritative, preserve it during workflow-related changes, and avoid introducing conflicting workflow layouts or duplicate canonical artifacts in unrelated locations.
+Agents must treat that structure as authoritative and preserve it during workflow-related changes.
 
 ---
 
@@ -131,20 +126,20 @@ A new request, idea, feature, improvement, or bug fix should be converted into a
 
 ### 2. Context Loading
 
-When the work affects an existing repository, subsystem, implementation surface, or architecture area, agents should load relevant context before treating the plan as ready.
+Context loading happens inside the drafting step — not as a separate step.
 
-Context loading may include:
+When the work affects an existing repository, subsystem, implementation surface, or architecture area, agents should load relevant context before producing the draft:
 
-- inspecting related files
-- identifying likely touchpoints
-- understanding current behavior
-- checking conventions or constraints
-- identifying architecture implications
-- loading `forge/architecture/INDEX.md` and relevant architecture documents
+- load `forge/architecture/INDEX.md` and relevant architecture documents
+- review related files in `src/`, `ui/`, or `tests/` when the work affects existing code
+- identify likely touchpoints, constraints, and established conventions
+- use Tavily to look up current external documentation if requirements reference version-sensitive technology
 
 ### 3. Refinement
 
 Specs may be refined iteratively.
+
+To refine: edit `spec.md` directly, add inline notes or items to `Open Questions`, then re-run the spec agent pointing at the current draft. The agent reads the annotations and produces an updated version.
 
 Refinement should:
 
@@ -162,65 +157,56 @@ Tasks should be:
 
 - atomic enough to execute safely
 - specific enough to act on directly
-- aligned to the approved scope
-- explicit about expected validation or verification where relevant
+- explicit about expected validation or verification
 - assigned to the correct agent using the `Agent` field (`task` or `ui-task`)
 
-For specs with `Type: cross-cutting`, task generation must identify which tasks belong to which execution domain and assign agents accordingly. Tasks of mixed type must not be merged into a single task.
+For cross-cutting specs, tasks of different execution domains must be assigned to different agents. Tasks of mixed type must not be merged.
 
-When a spec introduces or modifies a subsystem with architecture impact, task generation must include an explicit architecture update task. That task is assigned `Agent: task` and scoped to updating the relevant document(s) in `forge/architecture/` and `INDEX.md`.
+When a spec introduces or modifies a subsystem with architecture impact, task generation must include an explicit architecture update task assigned to `Agent: task`.
 
-When a spec introduces a new subsystem and no architecture document exists for it yet, the spec agent creates the initial architecture document as part of producing the planning package. This is the architecture bootstrapping event for that subsystem.
+When a spec introduces a new subsystem with no existing architecture document, the spec agent creates the initial document as part of producing the planning package.
 
-### 5. Approval Boundary
+### 5. Drift and Material Change
 
-When the workflow uses approval, execution must not begin until the current planning package has been approved.
-
-Approval of the planning package authorizes execution of the approved task set against the approved spec.
-
-Approval does not authorize:
-
-- work outside approved scope
-- silent scope expansion
-- bypassing verification
-- continuing with stale tasks after material planning changes
-
-### 6. Drift and Material Change
-
-If the spec changes after tasks are created, agents must evaluate whether the tasks have drifted from the current spec.
+If the spec changes after tasks are created, agents must evaluate whether the tasks have drifted.
 
 If a change is material, affected tasks should be revised or regenerated before execution continues.
 
-If execution reveals a material issue in the approved plan, the workflow should return to refinement rather than improvising unapproved scope changes.
+If execution reveals a material issue in the approved plan, the workflow should return to refinement rather than improvising scope changes.
+
+### 6. Blocked Tasks
+
+When a task is blocked:
+
+- re-run it through the appropriate agent with context about the blocker
+- if the blocker reveals the spec is wrong, return to refinement first
 
 ### 7. Verification
 
-After execution, the implementation should be verified against the approved planning package.
+After execution, the implementation should be verified against the planning package.
 
 If verification fails:
 
 - the work remains active
 - remediation is required
-- execution and verification may repeat until the approved scope is satisfied
+- execution and verification may repeat until the scope is satisfied
 
 ### 8. Completion
 
-A work item should be considered complete only when:
+A work item is complete when:
 
-- the planning package is current and approved where required
-- execution for the approved scope is complete
-- verification has passed
+- all tasks have `Status: done`
+- all `Acceptance Checks` are satisfied
+- the human runs `/archive-spec` as the deliberate sign-off
 
 ### 9. Repository Structure Preservation
-
-When agents create, revise, or add workflow-related artifacts, they must keep those artifacts aligned with the authoritative repository structure described in `WORKFLOW.md`.
 
 Agents must not:
 
 - treat the structure as optional guidance
 - relocate canonical workflow documents casually
 - duplicate canonical templates in unrelated directories without explicit reason
-- introduce alternate workflow roots that create ambiguity about repository truth
+- introduce alternate workflow roots that create ambiguity
 
 ---
 
@@ -228,39 +214,31 @@ Agents must not:
 
 ### Specification
 
-The spec should remain the primary source of planning truth for the work item.
+The spec should define enough context to explain:
 
-It should define enough context to explain:
-
-- what is changing
-- why it is changing
-- what is in scope
-- what is out of scope
+- what is changing and why
+- what is in scope and out of scope
 - what behavior is expected
 - what constraints or assumptions matter
 - what execution domain the work belongs to (`Type`)
 
 ### Tasks
 
-Tasks should be execution-facing artifacts derived from the current spec.
+Tasks are execution-facing artifacts derived from the current spec. They must not become informal replacement specs.
 
-Tasks should not become informal replacement specs.
-
-Each task must declare the `Agent` that will execute it. This is a required field, not optional guidance. The `Agent` field is the execution routing instruction — whoever runs the task reads this field and invokes the corresponding agent.
+Each task must declare the `Agent` that will execute it. This is a required field. The `Agent` field is the execution routing instruction — read it and invoke the corresponding agent.
 
 ### Architecture Documents
 
-Architecture documents in `forge/architecture/` should be created and updated only through explicit, scoped tasks. They must not be modified as incidental side effects of implementation work.
+Architecture documents in `forge/architecture/` are created and updated through explicit, scoped tasks — except `project-structure.md`, which is updated in-place by task and ui-task agents whenever a task creates files or folders not yet reflected in it.
 
 `INDEX.md` must be kept current whenever an architecture document is created or meaningfully updated.
 
 ### Workflow and Template Documents
 
-Workflow docs and templates should remain stable enough to support consistent authoring and downstream automation.
+Workflow docs and templates should remain stable enough to support consistent authoring.
 
-Agents should not casually rename required sections, remove required structure, or introduce incompatible formatting in canonical templates.
-
-Workflow docs and templates must remain in their defined `forge/config` locations unless an explicitly approved repository change updates that structure.
+Agents must not casually rename required sections, remove required structure, or introduce incompatible formatting in canonical templates.
 
 ---
 
@@ -270,98 +248,91 @@ Agents performing implementation work must:
 
 - stay within approved scope
 - use the current spec and current tasks as execution inputs
-- load `forge/architecture/INDEX.md` and relevant architecture documents before beginning
+- load `forge/architecture/INDEX.md`, `forge/architecture/project-structure.md`, and relevant architecture documents before beginning
 - surface blockers or inconsistencies explicitly
 - avoid hidden scope expansion
-- preserve alignment between implementation and planning artifacts
+- update `forge/architecture/project-structure.md` in-place if the task creates files or folders not yet reflected in it
 
-If the implementation needs to diverge materially from the approved plan, the plan should be revised first.
+If the implementation needs to diverge materially from the plan, the plan should be revised first.
 
 ---
 
 ## Roles & Responsibilities
 
-### Human / Approver
+### Human
 
-Responsible for:
-
-- providing the original requirements or direction
-- reviewing the planning package produced by the spec agent
-- granting or withholding approval
-- determining whether the proposed work matches intended scope
+- provides requirements and direction
+- reviews planning packages
+- annotates and refines specs when needed
+- re-runs agents to resolve blocked tasks
+- runs `/archive-spec` as the sign-off when all tasks are done
 
 ### Orchestrator (spec agent)
 
-Responsible for:
-
-- converting requirements into a structured spec using the canonical spec template
-- loading relevant context and architecture reference documents before drafting
-- producing a draft immediately — surfacing gaps in `Open Questions` rather than blocking on clarification
-- generating tasks from the current spec, with correct `Agent` assignment per task
-- creating initial architecture documents when a spec introduces a new subsystem with no existing coverage
-- generating explicit architecture update tasks when a spec has architecture impact
-- identifying gaps, ambiguity, and drift
-- preparing the planning package for human review and approval
+- converts requirements into a structured spec using the canonical spec template
+- loads architecture context and repository files before drafting
+- produces a draft immediately — surfaces gaps in `Open Questions`
+- generates tasks from the current spec with correct `Agent` assignment
+- creates initial architecture documents when a spec introduces a new subsystem with no existing coverage
+- generates explicit architecture update tasks when a spec has architecture impact
 
 ### Executor (task agent)
 
-Responsible for:
-
-- implementing approved tasks of type `engine`, `backend`, `workflow`, `config`, or `architecture`
-- keeping execution aligned to approved scope
-- updating task status where relevant
-- surfacing implementation issues that require planning revision
-- when executing an architecture task: updating the relevant document(s) in `forge/architecture/` and keeping `INDEX.md` current
+- implements approved tasks of type `engine`, `backend`, `workflow`, `config`, or `architecture`
+- keeps execution aligned to approved scope
+- updates `forge/architecture/project-structure.md` in-place if the task creates files or folders not yet reflected in it
+- surfaces blockers explicitly
+- updates task `Status` to `done` after all Acceptance Checks pass
+- when executing an architecture task: updates the relevant document(s) and keeps `INDEX.md` current
 
 ### Executor (ui-task agent)
 
-Responsible for:
+- implements approved tasks of type `ui`
+- loads and follows any UI conventions document at `forge/config/workflow/UI_CONVENTIONS.md` if present
+- keeps UI execution aligned to approved scope
+- updates `forge/architecture/project-structure.md` in-place if the task creates files or folders not yet reflected in it
+- surfaces blockers explicitly
+- updates task `Status` to `done` after all Acceptance Checks pass
 
-- implementing approved tasks of type `ui`
-- loading and following any UI conventions document defined by the project under `forge/config/workflow/`
-- keeping UI execution aligned to approved scope
-- surfacing implementation issues that require planning revision
+### Architecture
 
-The `ui-task` agent shares the same operating contract as the `task` agent. It differs in execution domain, grounding documents, and escalation triggers. Both agents must respect the same approval, verification, and scope discipline.
-
-The `Agent` field in each task file is the routing instruction. The person running the task reads that field and invokes the corresponding agent — no judgment call is required.
-
----
-
-## Architecture Rule
-
-Architecture updates should be treated as deliberate documentation work, not incidental side effects.
-
-If a work item has architecture impact, the architecture implications should be identified at spec time and expressed as an explicit task.
-
-There is no separate architecture agent. Architecture tasks are executed by the `task` agent. The deliberateness comes from task scoping, not from a separate agent role.
-
-Architecture documents should remain consistent with:
-
-- approved direction
-- actual repository structure
-- implemented behavior when the work is complete
+There is no separate architecture agent. Architecture is managed through:
+- spec agent bootstrapping new architecture documents
+- explicit architecture tasks executed by the task agent
+- `project-structure.md` updated in-place by task and ui-task agents whenever new files or folders are created
+- `INDEX.md` kept current as documents are created or updated
 
 ---
 
-## Status and Recordkeeping Guidance
+## Practical Default Behavior
 
-If the repository uses explicit statuses, approval logs, revision logs, verification records, or work history, agents should keep those records aligned with actual workflow state.
+**Spec agent:**
+1. check memory for current FS number and known project constraints
+2. scan `forge/active/` to determine next FS number
+3. load `forge/architecture/INDEX.md` and relevant architecture documents
+4. load repository context when the work affects existing code
+5. use Tavily if requirements reference version-sensitive external technology
+6. produce a draft spec immediately — capture gaps in `Open Questions`
+7. generate tasks from the spec with correct `Agent` assignment per task
+8. create initial architecture document if the spec introduces a new subsystem with no existing coverage
+9. generate an explicit architecture update task if the spec has architecture impact
+10. store new FS number and any architecture decisions in memory
 
-Agents must not:
-
-- mark work complete before verification passes
-- represent unapproved work as approved
-- preserve stale approvals after material change
-- hide workflow rollback when rework is needed
-
-Workflow-related records should also remain structurally consistent with the repository workflow layout defined in `WORKFLOW.md`.
+**Task and ui-task agents:**
+1. load the assigned task file
+2. load the source spec
+3. load `forge/architecture/INDEX.md` and `forge/architecture/project-structure.md`
+4. load relevant architecture documents for the task area
+5. check memory for known constraints or decisions relevant to this task
+6. execute within approved scope
+7. update `project-structure.md` in-place if new files or folders were created
+8. verify results against all Acceptance Checks
+9. if executing an architecture task: update the relevant document and `INDEX.md`, store change in memory
+10. update task `Status` to `done`
 
 ---
 
 ## What This File Should Not Contain
-
-This file should not be used for:
 
 - agent-specific personas
 - tool-specific runtime configuration
@@ -370,31 +341,4 @@ This file should not be used for:
 - long task-specific playbooks
 - duplicated copies of detailed workflow docs better maintained elsewhere
 
-Those concerns should live in the appropriate tool configuration, agent definition file under `.opencode/agents/`, or workflow document.
-
----
-
-## Practical Default Behavior
-
-Unless a more specific repository rule overrides this behavior, agents should default to the following:
-
-**Spec agent:**
-1. receive requirements
-2. load `forge/architecture/INDEX.md` and relevant architecture documents
-3. load repository context when relevant
-4. produce a draft spec immediately — capture gaps in `Open Questions`
-5. generate tasks from the spec, with correct `Agent` assignment per task
-6. generate architecture bootstrap document if the spec introduces a new subsystem with no existing coverage
-7. generate an explicit architecture update task if the spec has architecture impact
-8. present the planning package for human review and approval
-
-**Task and ui-task agents:**
-1. load the assigned task file
-2. load the source spec
-3. load `forge/architecture/INDEX.md` and relevant architecture documents
-4. execute within approved scope
-5. verify results against acceptance checks
-6. if executing an architecture task: update the relevant document and `INDEX.md`
-7. preserve durable workflow truth in repository artifacts
-
-Spark-Forge should remain structured, explicit, revision-aware, and practical for real use.
+Those concerns belong in `.opencode/agents/` or `forge/config/workflow/`.

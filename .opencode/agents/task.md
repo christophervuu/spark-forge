@@ -49,6 +49,7 @@ Implement one approved task of type `engine`, `backend`, `workflow`, `config`, o
 - Load the assigned task file
 - Load the source spec referenced in the task
 - Load `forge/architecture/INDEX.md`
+- Load `forge/architecture/project-structure.md`
 - Load the architecture documents relevant to the task area
 - Check memory for known constraints or decisions relevant to this task area
 - Use tavily if the task requires current external documentation before starting
@@ -60,6 +61,13 @@ Implement one approved task of type `engine`, `backend`, `workflow`, `config`, o
 - Surface blockers or inconsistencies explicitly rather than guessing
 - Do not expand scope beyond what the task authorizes
 - Use tavily mid-task if a specific knowledge gap is blocking progress — do not guess
+
+## Project structure updates
+
+If this task creates files or folders not yet reflected in `forge/architecture/project-structure.md`:
+- Update `project-structure.md` in place as part of this task
+- Do not create a separate architecture task for this — it is a lightweight side update
+- Only update the document to reflect what you actually created — do not speculate about future structure
 
 ## Architecture tasks
 

@@ -6,7 +6,7 @@ Spark-Forge is a personal spec-driven development workflow for turning ideas int
 
 The purpose of this workflow is to make development more deliberate, reviewable, and consistent by requiring work to be expressed first as a specification and then as a set of concrete tasks before implementation begins.
 
-In this workflow, the spec is the primary planning artifact. It captures the problem, goals, scope, constraints, assumptions, and expected behavior of the work item. Tasks are then derived from the spec and used as the execution layer of the approved plan.
+In this workflow, the spec is the primary planning artifact. It captures the problem, goals, scope, constraints, assumptions, and expected behavior of the work item. Tasks are then derived from the spec and used as the execution layer of the plan.
 
 This workflow is intended to support both exploratory feature work and changes to existing systems. When work touches an existing repository or subsystem, the planning process should be grounded in actual repository context rather than assumptions.
 
@@ -116,7 +116,7 @@ Idea capture should be lightweight. The goal is not to fully solve the work at t
 
 **Purpose**
 
-Produce the first durable planning artifact for the work item.
+Produce the first durable planning artifact for the work item, grounded in real repository and architecture context.
 
 **Who**
 
@@ -126,6 +126,17 @@ The spec agent.
 
 - requirements or idea summary
 - any known constraints or desired outcomes
+
+**Before drafting**
+
+The spec agent loads context before producing the draft:
+
+- loads `forge/architecture/INDEX.md` and relevant architecture documents
+- scans `forge/active/` for related in-progress specs that may affect scope or constraints
+- reviews related files in `src/`, `ui/`, or `tests/` when the work affects existing code
+- uses Tavily to look up current external documentation if requirements reference version-sensitive technology
+
+This context loading happens inside the drafting step — it is not a separate step.
 
 **Output**
 
@@ -149,54 +160,23 @@ The spec should define:
 - open questions or unresolved ambiguity
 - execution domain (`Type`) so tasks can be assigned to the correct agent
 
-The spec agent also generates the initial task set from the current spec. Each task includes an `Agent` field (`task` or `ui-task`) that serves as the execution routing instruction.
+Each task includes an `Agent` field (`task` or `ui-task`) that serves as the execution routing instruction.
 
 When the spec introduces a subsystem or area with architecture impact, the spec agent either creates an initial architecture document for that area (if none exists) or generates an explicit architecture update task pointing at the relevant existing document.
 
 ---
 
-### 3. Context Loading
+### 3. Refinement Loop
 
 **Purpose**
 
-Ground the spec in real context before planning is finalized.
+Improve the spec until it is clear enough to support reliable task generation.
 
-**When Required**
+**How to trigger refinement**
 
-Context loading is required when the work affects:
+Edit `spec.md` directly in your editor. Add notes inline next to sections you want changed, or add items to `Open Questions`. Then re-run the spec agent with the instruction to refine the current draft. The agent reads your annotations as instructions and produces an updated version in place.
 
-- an existing repository
-- an existing subsystem
-- current implementation behavior
-- architecture constraints
-- established conventions or patterns
-
-**When Optional**
-
-Context loading may be skipped when the work is clearly greenfield with no existing implementation surface.
-
-**Output**
-
-- relevant repo, system, or product context incorporated into the spec
-
-**Guidance**
-
-Context loading may include:
-
-- loading `forge/architecture/INDEX.md` and relevant architecture documents
-- reviewing related files, modules, or folders in `src/`, `ui/`, or `tests/`
-- identifying likely touchpoints
-- understanding existing behavior
-- identifying technical or architectural constraints
-- checking for conflicts with current patterns
-
----
-
-### 4. Refinement Loop
-
-**Purpose**
-
-Improve the spec until it is clear enough to support reliable task generation and human approval.
+Example: add `> Note: scope this to read-only for now` next to a section, then tell the spec agent *"refine forge/active/FS-001/spec.md — see inline notes."*
 
 **Activities**
 
@@ -216,11 +196,11 @@ Improve the spec until it is clear enough to support reliable task generation an
 
 Refinement is iterative. It may occur multiple times. Ambiguity should be surfaced explicitly rather than silently resolved.
 
-If task generation exposes gaps in the spec, return to refinement, update the spec, and regenerate affected tasks before requesting approval.
+If task generation exposes gaps in the spec, annotate and refine before execution begins.
 
 ---
 
-### 5. Task Generation
+### 4. Task Generation
 
 **Purpose**
 
@@ -248,53 +228,21 @@ Tasks should be:
 
 For cross-cutting specs, tasks of different execution domains must be assigned to different agents. Tasks of mixed type must not be merged.
 
-The `Agent` field is the routing instruction for whoever executes the task. No judgment is required at execution time — the field was set at planning time.
+The `Agent` field is the routing instruction. Read it and invoke the corresponding agent — no judgment required.
 
 Tasks are execution units, not replacements for the spec.
 
 ---
 
-### 6. Planning Review and Approval
+### 5. Execution
 
 **Purpose**
 
-Human review of the full planning package before execution begins.
-
-**Planning Package**
-
-- the current spec at `forge/active/FS-###/spec.md`
-- the current task set at `forge/active/FS-###/tasks/`
-
-**Approval Effect**
-
-Approval authorizes execution of the approved task set against the approved spec.
-
-Approval does not authorize:
-
-- work outside approved scope
-- silent scope expansion
-- skipping verification
-- continuing with stale tasks after material changes
-
-**If Changes Are Requested**
-
-Return to refinement, revise the affected artifacts, regenerate tasks as needed, and request approval again.
-
-**Guidance**
-
-This is the primary human checkpoint. Review the `Open Questions` section — any unresolved items that block execution should be resolved before approval, or explicitly deferred with a note.
-
----
-
-### 7. Execution
-
-**Purpose**
-
-Implement the approved work, one task at a time.
+Implement the work, one task at a time.
 
 **Input**
 
-- an approved task file from `forge/active/FS-###/tasks/`
+- a task file from `forge/active/FS-###/tasks/`
 - the source spec at `forge/active/FS-###/spec.md`
 - relevant architecture reference documents from `forge/architecture/`
 
@@ -310,23 +258,27 @@ Read the `Agent` field in the task file:
 
 **Guidance**
 
-Execution must remain aligned to the approved planning package.
+Execution must remain aligned to the planning package.
 
-If execution reveals a material problem in the approved plan, return to refinement rather than improvising unapproved scope changes.
+**If a task is blocked:** re-run it through the appropriate agent with context about the blocker. Most blockers are execution obstacles — a failing test, a missing dependency, an unclear implementation detail — and are resolved by giving the agent more context and re-running.
+
+If the blocker reveals the spec itself is wrong — the task assumes a capability that doesn't exist, or the scope was defined incorrectly — return to refinement, fix the spec, regenerate affected tasks, and re-execute.
+
+If execution reveals a material problem in the plan, return to refinement rather than improvising scope changes.
 
 ---
 
-### 8. Verification
+### 6. Verification
 
 **Purpose**
 
-Confirm the implemented work satisfies the approved plan.
+Confirm the implemented work satisfies the plan.
 
 **Input**
 
 - completed implementation
-- approved spec
-- approved task file
+- source spec
+- task file
 
 **Output**
 
@@ -343,13 +295,13 @@ Verification may include:
 - deterministic repository checks
 - direct comparison between implementation and approved behavior
 
-If verification fails, the work remains active and remediation is required. Execution and verification repeat until the approved scope is satisfied.
+If verification fails, the work remains active and remediation is required. Execution and verification repeat until the scope is satisfied.
 
 A task must not be marked `done` until all `Acceptance Checks` in the task file are satisfied.
 
 ---
 
-### 9. Completion / Archive
+### 7. Completion / Archive
 
 **Purpose**
 
@@ -365,13 +317,13 @@ A spec may be archived only when:
 
 **How**
 
-The human runs `/archive-spec` with the spec ID. This command:
+Run `/archive-spec` with the spec ID. This command:
 
 1. Verifies all tasks are `Status: done`
 2. Updates the spec `Status` to `completed`
 3. Moves the entire `forge/active/FS-###/` folder to `forge/completed/FS-###/`
 
-The `/archive-spec` command is the only mechanism for moving a spec to completed. Agents do not move specs — the human triggers this as a deliberate sign-off.
+`/archive-spec` is the only mechanism for moving a spec to completed. Running it is the deliberate sign-off that the work is done.
 
 **Output**
 
@@ -380,7 +332,9 @@ The `/archive-spec` command is the only mechanism for moving a spec to completed
 
 **Guidance**
 
-If even one task is not `done`, the spec stays in `forge/active/`. There are no partial moves. The completed folder is an archive of finished work — spec and all its tasks together.
+If even one task is not `done`, the spec stays in `forge/active/`. There are no partial moves.
+
+Architecture documents created during this spec's lifecycle remain in `forge/architecture/` permanently. They are not archived with the spec — they are a living source of truth for the whole project.
 
 ---
 
@@ -405,16 +359,16 @@ Use commands for mechanical, repeated actions. Use agents for work that requires
 
 - `draft` — produced by the spec agent, not yet reviewed
 - `refining` — open questions or scope gaps are being resolved
-- `ready` — planning-ready, suitable for approval
+- `ready` — planning-ready, tasks generated, ready for execution
 - `in_progress` — one or more tasks are being executed
 - `completed` — all tasks are done and the spec has been archived via `/archive-spec`
 - `archived` — retired, replaced, or no longer relevant
 
 ### Task State Expectations
 
-- `todo` — approved, not yet started
+- `todo` — not yet started
 - `in_progress` — actively being executed
-- `blocked` — cannot proceed due to a dependency or unresolved issue
+- `blocked` — cannot proceed; re-run with blocker context or return to refinement if the spec is wrong
 - `done` — implementation and task-level verification complete, all Acceptance Checks satisfied
 
 Tasks are never moved individually. A task's completion is recorded by updating its `Status` field to `done` in place. The task file stays in `forge/active/FS-###/tasks/` until the entire spec is archived.
@@ -444,29 +398,22 @@ If the spec changes:
 - revise or regenerate materially affected tasks
 - do not continue execution from stale tasks when material drift exists
 
-### Approval Freshness
-
-If a material planning change occurs after approval:
-- treat previous approval as stale for the affected scope
-- update the planning package
-- request approval again before continuing execution
-
 ---
 
 ## Roles & Responsibilities
 
-### Human / Approver
+### Human
 
 - provides requirements and direction
 - reviews the planning package
-- resolves open questions when needed
-- grants or withholds approval
-- runs `/archive-spec` as the deliberate sign-off when all tasks are done
+- annotates and refines specs when needed
+- re-runs agents to resolve blocked tasks
+- runs `/archive-spec` as the sign-off when all tasks are done
 
 ### Orchestrator (spec agent)
 
 - converts requirements into a spec + task set
-- loads architecture context before drafting
+- loads architecture and repository context before drafting
 - produces drafts immediately; surfaces gaps in `Open Questions`
 - assigns `Agent` field per task
 - bootstraps architecture documents for new subsystems
@@ -476,8 +423,9 @@ If a material planning change occurs after approval:
 
 - implements approved tasks of type `engine`, `backend`, `workflow`, `config`, or `architecture`
 - writes code to `src/` and tests to `tests/` as appropriate
+- updates `forge/architecture/project-structure.md` if it creates files or folders not yet reflected there
 - stays within approved scope
-- surfaces blockers requiring planning revision
+- surfaces blockers explicitly
 - updates task `Status` to `done` after all Acceptance Checks pass
 - updates architecture documents and `INDEX.md` when executing architecture tasks
 
@@ -485,9 +433,10 @@ If a material planning change occurs after approval:
 
 - implements approved tasks of type `ui`
 - writes code to `ui/` as appropriate
+- updates `forge/architecture/project-structure.md` if it creates files or folders not yet reflected there
 - follows the UI conventions document under `forge/config/workflow/` if present
 - stays within approved scope
-- surfaces blockers requiring planning revision
+- surfaces blockers explicitly
 - updates task `Status` to `done` after all Acceptance Checks pass
 
 ### Architecture
@@ -496,6 +445,7 @@ There is no separate architecture agent. Architecture is managed through:
 - spec agent bootstrapping new architecture documents
 - explicit architecture tasks executed by the task agent
 - `INDEX.md` kept current as documents are created or updated
+- `project-structure.md` updated in-place by task and ui-task agents whenever new files or folders are created
 
 ---
 
@@ -506,12 +456,12 @@ There is no separate architecture agent. Architecture is managed through:
 - Prefer small, atomic tasks over large blended tasks.
 - Make ambiguity explicit in `Open Questions` rather than guessing.
 - Ground planning in real repository and architecture context.
-- Treat approval as approval of the full planning package.
 - Return to refinement when material changes appear.
 - Require verification before marking any task done.
-- Only run `/archive-spec` when every task is genuinely done — it is the human sign-off.
+- Only run `/archive-spec` when every task is genuinely done.
 - Keep `forge/architecture/INDEX.md` current at all times.
 - Treat architecture updates as deliberate scoped tasks, not side effects.
+- Keep `project-structure.md` current — update it in the same task that creates new files or folders.
 
 ---
 
@@ -519,23 +469,31 @@ There is no separate architecture agent. Architecture is managed through:
 
 ### How do I start a new work item?
 
-Run `/new-spec` to set up the intake context, then send your requirements to the spec agent.
+Run `/new-spec`, then send your requirements to the spec agent.
 
 ### What if the spec has open questions?
 
-Review them. Resolve what you can by annotating the spec and re-running the spec agent, or edit directly. Unresolved questions that do not block execution can be deferred with a note.
+Edit `spec.md` directly, add notes inline or in `Open Questions`, then re-run the spec agent with the instruction to refine the current draft.
+
+### How do I refine a spec?
+
+Edit the spec file directly in your editor. Add `> Note:` annotations inline next to sections you want changed, or add items to `Open Questions`. Then re-run the spec agent pointing at the current draft — it will read your annotations and produce an updated version.
 
 ### How do I know which agent to use for a task?
 
 Read the `Agent` field in the task file. It is either `task` or `ui-task`. Invoke the corresponding agent.
 
+### What do I do when a task is blocked?
+
+Re-run the task through the appropriate agent with context about what blocked it. If the blocker is an execution obstacle, more context usually resolves it. If the blocker reveals the spec is wrong, return to refinement first.
+
 ### When does a task move to the completed folder?
 
-It does not move individually. Tasks stay in `forge/active/FS-###/tasks/` and their `Status` field is updated to `done` in place. The entire spec folder moves only when all tasks are done and you run `/archive-spec`.
+It does not move individually. Tasks stay in `forge/active/FS-###/tasks/` with their `Status` updated to `done` in place. The entire spec folder moves only when all tasks are done and you run `/archive-spec`.
 
 ### When does a spec get archived?
 
-When every task has `Status: done` and you deliberately run `/archive-spec`. The command is the sign-off — it does not happen automatically.
+When every task has `Status: done` and you run `/archive-spec`.
 
 ### When does an architecture document get created?
 
@@ -544,6 +502,10 @@ When the spec agent processes a spec that introduces a new subsystem with no exi
 ### How do architecture documents get updated?
 
 Through an explicit architecture update task generated by the spec agent when the spec has architecture impact. The task agent executes it.
+
+### How does `project-structure.md` get updated?
+
+The task or ui-task agent updates it in-place as part of any task that creates files or folders not yet reflected in the document. It does not require a separate architecture task — it is treated as a lightweight side update within the same task.
 
 ### Is the repository structure optional?
 

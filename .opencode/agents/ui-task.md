@@ -49,6 +49,7 @@ Implement one approved task of type `ui`.
 - Load the assigned task file
 - Load the source spec referenced in the task
 - Load `forge/architecture/INDEX.md`
+- Load `forge/architecture/project-structure.md`
 - Load the architecture documents relevant to the task area
 - Load the UI conventions document if one exists under `forge/config/workflow/`
 - Check memory for known UI patterns or design decisions relevant to this task
@@ -64,6 +65,13 @@ Implement one approved task of type `ui`.
 - Surface blockers or inconsistencies explicitly rather than guessing
 - Do not expand scope beyond what the task authorizes
 - Use tavily mid-task if a specific knowledge gap is blocking progress — do not guess
+
+## Project structure updates
+
+If this task creates files or folders not yet reflected in `forge/architecture/project-structure.md`:
+- Update `project-structure.md` in place as part of this task
+- Do not create a separate architecture task for this — it is a lightweight side update
+- Only update the document to reflect what you actually created — do not speculate about future structure
 
 ## Verification
 
