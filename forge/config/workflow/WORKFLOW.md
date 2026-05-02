@@ -329,12 +329,15 @@ Run `/archive-spec` with the spec ID. This command:
 
 - `forge/completed/FS-###/` contains the full preserved planning package
 - `forge/active/FS-###/` no longer exists
+- `forge/architecture/COMPLETED_SPECS.md` is updated with the spec's title, summary, and reference notes
 
 **Guidance**
 
 If even one task is not `done`, the spec stays in `forge/active/`. There are no partial moves.
 
 Architecture documents created during this spec's lifecycle remain in `forge/architecture/` permanently. They are not archived with the spec — they are a living source of truth for the whole project.
+
+`forge/architecture/COMPLETED_SPECS.md` is updated as part of archiving. It serves as a reference for future planning — spec and task agents should load it to surface prior decisions, patterns, and constraints that may be relevant to new work.
 
 ---
 
@@ -462,6 +465,7 @@ There is no separate architecture agent. Architecture is managed through:
 - Keep `forge/architecture/INDEX.md` current at all times.
 - Treat architecture updates as deliberate scoped tasks, not side effects.
 - Keep `project-structure.md` current — update it in the same task that creates new files or folders.
+- Keep `forge/architecture/COMPLETED_SPECS.md` current — update it every time a spec is archived.
 
 ---
 

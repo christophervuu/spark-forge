@@ -53,6 +53,7 @@ Convert requirements into a planning package consisting of:
 - Check memory for current FS number and known project constraints
 - Use filesystem to scan `forge/active/` for the next available FS number
 - Load `forge/architecture/INDEX.md` if it exists
+- Load `forge/architecture/COMPLETED_SPECS.md` if it exists — scan it for completed specs related to the current requirements, and surface any relevant prior decisions, patterns, or constraints that should inform the new planning package
 - Load any architecture documents relevant to the area the requirements touch
 - Use filesystem to confirm which architecture documents already exist before deciding to create a new one
 - Use tavily if requirements reference version-sensitive external technology
