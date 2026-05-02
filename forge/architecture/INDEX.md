@@ -13,6 +13,7 @@ This file must be kept current. When an architecture document is created or mean
 | Document | Covers | Last Updated |
 |---|---|---|
 | [project-structure.md](./project-structure.md) | Repository layout — where source code, UI code, and tests live. File and folder conventions within `src/`, `ui/`, and `tests/`. | 2026-04-29 |
+| [COMPLETED_SPECS.md](./COMPLETED_SPECS.md) | Registry of completed functional specs — titles, summaries, and reference notes for past work. | 2026-05-02 |
 
 ---
 
